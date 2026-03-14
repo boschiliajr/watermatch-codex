@@ -9,6 +9,11 @@ export function DemandsTable() {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  function relOne<T>(v: T | T[] | null | undefined): T | null {
+    if (!v) return null;
+    return Array.isArray(v) ? (v[0] ?? null) : v;
+  }
+
   async function load() {
     setLoading(true);
     const { data } = await supabaseBrowser
@@ -68,35 +73,39 @@ export function DemandsTable() {
                 </tr>
               ))
             ) : rows.length ? (
-              rows.map((row) => (
-                <tr key={row.id} className="tr">
-                  <td className="py-3 px-3">{row.municipalities?.municipio || "-"}</td>
-                  <td className="py-3 px-3">{row.descricao_problema}</td>
-                  <td className="py-3 px-3">
-                    {row.tipologia_sugerida?.pdc_codigo ? (
-                      <span className="chip chip-primary">{row.tipologia_sugerida.pdc_codigo}</span>
-                    ) : row.tipologia_sugerida?.tipologia_codigo ? (
-                      <span className="chip">{row.tipologia_sugerida.tipologia_codigo}</span>
-                    ) : (
-                      <span className="text-black/50 text-sm">-</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-3">
-                    {String(row.status || "").toLowerCase() === "matched" ? (
-                      <span className="chip chip-good">Matched</span>
-                    ) : String(row.status || "").toLowerCase() === "open" || String(row.status || "").toLowerCase() === "aberta" ? (
-                      <span className="chip chip-primary">Aberta</span>
-                    ) : (
-                      <span className="chip">{row.status}</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-3 text-right">
-                    <button className="text-coral hover:underline" onClick={() => setDeleteId(row.id)}>
-                      🗑
-                    </button>
-                  </td>
-                </tr>
-              ))
+              rows.map((row) => {
+                const m = relOne<{ municipio: string }>(row.municipalities);
+                const t = relOne<{ pdc_codigo?: string | null; tipologia_codigo?: string | null }>(row.tipologia_sugerida);
+                return (
+                  <tr key={row.id} className="tr">
+                    <td className="py-3 px-3">{m?.municipio || "-"}</td>
+                    <td className="py-3 px-3">{row.descricao_problema}</td>
+                    <td className="py-3 px-3">
+                      {t?.pdc_codigo ? (
+                        <span className="chip chip-primary">{t.pdc_codigo}</span>
+                      ) : t?.tipologia_codigo ? (
+                        <span className="chip">{t.tipologia_codigo}</span>
+                      ) : (
+                        <span className="text-black/50 text-sm">-</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3">
+                      {String(row.status || "").toLowerCase() === "matched" ? (
+                        <span className="chip chip-good">Matched</span>
+                      ) : String(row.status || "").toLowerCase() === "open" || String(row.status || "").toLowerCase() === "aberta" ? (
+                        <span className="chip chip-primary">Aberta</span>
+                      ) : (
+                        <span className="chip">{row.status}</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <button className="text-coral hover:underline" onClick={() => setDeleteId(row.id)}>
+                        🗑
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr className="tr">
                 <td className="py-4 px-3 text-black/60" colSpan={5}>

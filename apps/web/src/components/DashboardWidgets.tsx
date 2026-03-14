@@ -8,6 +8,11 @@ function formatBRL(value: number) {
   }
 }
 
+function relOne<T>(v: T | T[] | null | undefined): T | null {
+  if (!v) return null;
+  return Array.isArray(v) ? (v[0] ?? null) : v;
+}
+
 export async function DashboardWidgets() {
   const [{ data: demands }, { data: projects }] = await Promise.all([
     supabaseServer
@@ -19,7 +24,8 @@ export async function DashboardWidgets() {
 
   const pdcCounts = new Map<string, number>();
   for (const d of (demands || []) as any[]) {
-    const pdc = d?.tipologia_sugerida?.pdc_codigo || "Sem PDC";
+    const tip = relOne<{ pdc_codigo?: string | null }>(d?.tipologia_sugerida);
+    const pdc = tip?.pdc_codigo || "Sem PDC";
     pdcCounts.set(pdc, (pdcCounts.get(pdc) || 0) + 1);
   }
 
@@ -81,4 +87,3 @@ export async function DashboardWidgets() {
     </div>
   );
 }
-

@@ -7,9 +7,14 @@ import { useToast } from "@/components/Toast";
 type MatchRow = {
   id: string;
   score_compatibilidade: number;
-  demands?: { descricao_problema: string; municipalities?: { municipio: string } | null } | null;
-  companies?: { razao_social: string; tags_produtos_servicos: string[] | null } | null;
+  demands?: { descricao_problema: string; municipalities?: { municipio: string } | null } | Array<{ descricao_problema: string; municipalities?: { municipio: string } | null }> | null;
+  companies?: { razao_social: string; tags_produtos_servicos: string[] | null } | Array<{ razao_social: string; tags_produtos_servicos: string[] | null }> | null;
 };
+
+function relOne<T>(v: T | T[] | null | undefined): T | null {
+  if (!v) return null;
+  return Array.isArray(v) ? (v[0] ?? null) : v;
+}
 
 function pct(score: number) {
   if (!Number.isFinite(score)) return 0;
@@ -87,10 +92,12 @@ export default function MatchesPage() {
           ))
         ) : rows.length ? (
           rows.map((m) => {
-            const company = m.companies?.razao_social || "Empresa";
-            const municipio = m.demands?.municipalities?.municipio || "Municipio";
-            const desc = m.demands?.descricao_problema || "";
-            const tags = m.companies?.tags_produtos_servicos || [];
+            const c = relOne(m.companies);
+            const d = relOne(m.demands);
+            const company = c?.razao_social || "Empresa";
+            const municipio = d?.municipalities?.municipio || "Municipio";
+            const desc = d?.descricao_problema || "";
+            const tags = c?.tags_produtos_servicos || [];
             const p = pct(m.score_compatibilidade);
             return (
               <div key={m.id} className="card p-5 flex flex-col gap-3">
@@ -121,4 +128,3 @@ export default function MatchesPage() {
     </div>
   );
 }
-

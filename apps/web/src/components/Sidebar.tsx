@@ -1,19 +1,53 @@
-﻿export function Sidebar() {
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Icon } from "@/components/icons";
+
+function isActive(pathname: string, href: string) {
+  if (href === "/dashboard") return pathname === "/" || pathname === "/dashboard";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname();
+
+  const items = [
+    { href: "/dashboard", label: "Dashboard", icon: "dashboard" as const },
+    { href: "/empresas", label: "Empresas", icon: "companies" as const },
+    { href: "/prefeituras", label: "Prefeituras", icon: "municipalities" as const },
+    { href: "/demandas", label: "Demandas", icon: "demands" as const },
+    { href: "/matches", label: "Matches", icon: "matches" as const },
+    { href: "/projetos", label: "Projetos", icon: "projects" as const }
+  ];
+
   return (
-    <aside className="flex h-full flex-col gap-6 bg-ink text-white p-6 rounded-3xl">
+    <aside className="sidebar">
       <div>
-        <p className="text-sm uppercase tracking-[0.2em] text-white/60">WaterTech</p>
-        <h1 className="text-2xl font-semibold">Match PIT</h1>
+        <p className="sidebar-kicker">WaterTech</p>
+        <h1 className="sidebar-title">Match PIT</h1>
       </div>
-      <nav className="flex flex-col gap-3 text-sm">
-        <a href="#dashboard" className="hover:text-mint">Dashboard</a>
-        <a href="#cadastros" className="hover:text-mint">Cadastros</a>
-        <a href="#tabelas" className="hover:text-mint">Tabelas</a>
-        <a href="#projetos" className="hover:text-mint">Projetos</a>
+
+      <nav className="sidebar-nav" aria-label="Navegação principal">
+        {items.map((it) => {
+          const active = isActive(pathname, it.href);
+          return (
+            <Link
+              key={it.href}
+              href={it.href}
+              onClick={onNavigate}
+              className={active ? "nav-item nav-item-active" : "nav-item"}
+            >
+              <span className="shrink-0">
+                <Icon name={it.icon} />
+              </span>
+              <span className="truncate">{it.label}</span>
+            </Link>
+          );
+        })}
       </nav>
-      <div className="mt-auto text-xs text-white/60">
-        B2B para FEHIDRO
-      </div>
+
+      <div className="sidebar-foot">Protótipo para FEHIDRO</div>
     </aside>
   );
 }

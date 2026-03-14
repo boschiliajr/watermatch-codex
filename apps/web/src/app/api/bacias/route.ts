@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const municipio = String(searchParams.get("municipio") || "");
 
   if (!uf || !municipio) {
-    return NextResponse.json({ error: "uf e municipio são obrigatórios." }, { status: 400 });
+    return NextResponse.json({ error: "uf e municipio sao obrigatorios." }, { status: 400 });
   }
 
   const resolved = resolveBasinsByMunicipio({ uf, municipio });

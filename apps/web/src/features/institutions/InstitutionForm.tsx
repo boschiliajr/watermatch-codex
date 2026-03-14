@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useToast } from "@/components/Toast";
 
 type Kind = "company" | "municipality" | "government_other" | "unknown";
+
+type Basin = { code: string; name?: string; ugrhi?: number };
 
 type LookupResponse = {
   razao_social: string;
   municipio: string;
   uf: string;
-  bacia_hidrografica: string | null;
-  bacias_hidrograficas?: Array<{ code: string; name?: string; ugrhi?: number }>;
+  bacias_hidrograficas?: Basin[];
   natureza_juridica?: { codigo?: string | null; descricao?: string | null } | null;
   cnae_principal?: { codigo?: string | null; descricao?: string | null } | null;
   source: "opencnpj" | "mock";
@@ -25,27 +27,29 @@ function cleanCnpj(cnpj: string) {
 function formatKind(kind: Kind) {
   if (kind === "company") return "Empresa";
   if (kind === "municipality") return "Prefeitura";
-  if (kind === "government_other") return "Órgão Público (não prefeitura)";
+  if (kind === "government_other") return "Orgao publico (nao prefeitura)";
   return "Indefinido";
 }
 
 export function InstitutionForm() {
-  const [cnpj, setCnpj] = useState("");
+  const toast = useToast();
 
+  const [cnpj, setCnpj] = useState("");
   const [kind, setKind] = useState<"company" | "municipality">("company");
+
   const [suggestedKind, setSuggestedKind] = useState<Kind | null>(null);
   const [kindReason, setKindReason] = useState<string | null>(null);
+  const [lookupMeta, setLookupMeta] = useState<{ source: string; natureza?: string; cnae?: string } | null>(null);
 
   const [razaoSocial, setRazaoSocial] = useState("");
   const [nomePrefeitura, setNomePrefeitura] = useState("");
   const [municipio, setMunicipio] = useState("");
   const [uf, setUf] = useState("");
   const [tags, setTags] = useState("");
-  const [bacias, setBacias] = useState<Array<{ code: string; name?: string; ugrhi?: number }>>([]);
+  const [bacias, setBacias] = useState<Basin[]>([]);
 
   const [lookupError, setLookupError] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [lookupMeta, setLookupMeta] = useState<{ source: string; natureza?: string; cnae?: string } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const blocked = useMemo(() => {
     // We require a successful lookup/classification before inserting.
@@ -57,10 +61,10 @@ export function InstitutionForm() {
     if (!digits) return;
 
     setLookupError(null);
-    setStatus(null);
     setSuggestedKind(null);
     setKindReason(null);
     setLookupMeta(null);
+    setBacias([]);
 
     const res = await fetch("/api/lookup-cnpj", {
       method: "POST",
@@ -94,16 +98,15 @@ export function InstitutionForm() {
       setKind("company");
       setNomePrefeitura("");
     } else {
-      // unknown or government_other: keep the current selection, but block submit.
       setNomePrefeitura("");
     }
 
     if (data.kind === "government_other") {
       setLookupError(
-        "Este CNPJ parece ser de um órgão público que não é prefeitura/município. Por enquanto, o cadastro é bloqueado."
+        "Este CNPJ parece ser de um orgao publico que nao e prefeitura/municipio. Por enquanto, o cadastro e bloqueado."
       );
     } else if (data.kind === "unknown") {
-      setLookupError("Não foi possível determinar se este CNPJ é de empresa ou prefeitura. Tente novamente.");
+      setLookupError("Nao foi possivel determinar se este CNPJ e de empresa ou prefeitura. Tente novamente.");
     } else {
       setLookupError(null);
     }
@@ -111,17 +114,16 @@ export function InstitutionForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus(null);
 
     if (suggestedKind === null) {
-      setStatus("Consulte o CNPJ antes de cadastrar.");
+      toast.push({ kind: "info", title: "Consulta", message: "Consulte o CNPJ antes de cadastrar." });
       return;
     }
     if (blocked) return;
 
     const digits = cleanCnpj(cnpj);
     if (digits.length !== 14) {
-      setStatus("CNPJ inválido (precisa ter 14 dígitos).");
+      toast.push({ kind: "error", title: "CNPJ", message: "CNPJ invalido (precisa ter 14 digitos)." });
       return;
     }
 
@@ -146,56 +148,61 @@ export function InstitutionForm() {
             uf
           };
 
-    const res = await fetch("/api/institutions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/institutions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      setStatus(String(data?.error || "Falha ao cadastrar."));
-      return;
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.push({ kind: "error", title: "Cadastro", message: String(data?.error || "Falha ao cadastrar.") });
+        return;
+      }
+
+      toast.push({
+        kind: "success",
+        title: "Cadastro",
+        message: kind === "company" ? "Empresa cadastrada com sucesso." : "Prefeitura cadastrada com sucesso."
+      });
+
+      setCnpj("");
+      setSuggestedKind(null);
+      setKindReason(null);
+      setLookupMeta(null);
+      setRazaoSocial("");
+      setNomePrefeitura("");
+      setMunicipio("");
+      setUf("");
+      setTags("");
+      setBacias([]);
+      setLookupError(null);
+    } finally {
+      setSubmitting(false);
     }
-
-    setStatus(kind === "company" ? "Empresa cadastrada com sucesso." : "Prefeitura cadastrada com sucesso.");
-    setCnpj("");
-    setSuggestedKind(null);
-    setKindReason(null);
-    setRazaoSocial("");
-    setNomePrefeitura("");
-    setMunicipio("");
-    setUf("");
-    setTags("");
-    setBacias([]);
-    setLookupError(null);
-    setLookupMeta(null);
   }
 
   return (
-    <form className="card p-5 flex flex-col gap-4" onSubmit={handleSubmit}>
-      <h3 className="text-lg font-semibold">Cadastro de Instituição</h3>
+    <form className="card p-6 flex flex-col gap-5" onSubmit={handleSubmit}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="kicker">Cadastro</p>
+          <h3 className="text-xl font-semibold">Instituicao</h3>
+          <p className="text-sm text-black/60">A consulta determina o tipo e preenche dados basicos.</p>
+        </div>
+      </div>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <label className="text-sm">
+        <label className="field-label">
           CNPJ
-          <input
-            className="mt-1 w-full rounded-xl border px-3 py-2"
-            value={cnpj}
-            onChange={(e) => setCnpj(e.target.value)}
-            onBlur={handleLookup}
-            placeholder="00.000.000/0000-00"
-          />
+          <input className="input" value={cnpj} onChange={(e) => setCnpj(e.target.value)} onBlur={handleLookup} placeholder="00.000.000/0000-00" />
         </label>
 
-        <label className="text-sm">
+        <label className="field-label">
           Tipo
-          <select
-            className="mt-1 w-full rounded-xl border px-3 py-2 bg-white"
-            value={kind}
-            onChange={(e) => setKind(e.target.value as any)}
-            disabled={blocked}
-          >
+          <select className="input" value={kind} onChange={(e) => setKind(e.target.value as any)} disabled={blocked}>
             <option value="company">Empresa</option>
             <option value="municipality">Prefeitura</option>
           </select>
@@ -204,7 +211,7 @@ export function InstitutionForm() {
 
       {suggestedKind ? (
         <p className="text-xs text-black/60">
-          Sugestão do sistema: <span className="font-semibold">{formatKind(suggestedKind)}</span>
+          Sugestao do sistema: <span className="font-semibold">{formatKind(suggestedKind)}</span>
           {kindReason ? ` (${kindReason})` : null}
           {lookupMeta?.source ? ` · fonte: ${lookupMeta.source}` : null}
           {lookupMeta?.natureza ? ` · natureza: ${lookupMeta.natureza}` : null}
@@ -215,53 +222,37 @@ export function InstitutionForm() {
       {kind === "company" ? (
         <>
           <div className="grid gap-3 md:grid-cols-2">
-            <label className="text-sm">
-              Razão Social
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={razaoSocial}
-                onChange={(e) => setRazaoSocial(e.target.value)}
-              />
+            <label className="field-label">
+              Razao social
+              <input className="input" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
             </label>
-            <label className="text-sm">
-              Tags de Produtos/Serviços (separadas por vírgula)
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-                placeholder="T.3.1.2, drenagem, reuso"
-              />
+            <label className="field-label">
+              Tags (separadas por virgula)
+              <input className="input" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="T.3.1.2, drenagem, reuso" />
             </label>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
-            <label className="text-sm">
-              Município
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={municipio}
-                onChange={(e) => setMunicipio(e.target.value)}
-              />
+            <label className="field-label">
+              Municipio
+              <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
-            <label className="text-sm">
+            <label className="field-label">
               UF
-              <input className="mt-1 w-full rounded-xl border px-3 py-2" value={uf} onChange={(e) => setUf(e.target.value)} />
+              <input className="input" value={uf} onChange={(e) => setUf(e.target.value)} />
             </label>
           </div>
         </>
       ) : (
         <>
           <div className="grid gap-3 md:grid-cols-2">
-            <label className="text-sm">
-              Nome da Prefeitura
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={nomePrefeitura}
-                onChange={(e) => setNomePrefeitura(e.target.value)}
-              />
+            <label className="field-label">
+              Nome da prefeitura
+              <input className="input" value={nomePrefeitura} onChange={(e) => setNomePrefeitura(e.target.value)} />
             </label>
-            <div className="text-sm">
-              <p>Bacias Hidrográficas (auto)</p>
-              <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-sand flex flex-wrap gap-2 items-center">
+
+            <div className="field-label">
+              <p>Bacias (auto)</p>
+              <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-[var(--surface-2)] flex flex-wrap gap-2 items-center">
                 {bacias.length ? (
                   bacias.map((b) => (
                     <span key={b.code} className="text-xs rounded-full bg-white border px-3 py-1">
@@ -270,23 +261,20 @@ export function InstitutionForm() {
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-black/50">Não encontrado</span>
+                  <span className="text-xs text-black/50">Nao encontrado</span>
                 )}
               </div>
             </div>
           </div>
+
           <div className="grid gap-3 md:grid-cols-2">
-            <label className="text-sm">
-              Município
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={municipio}
-                onChange={(e) => setMunicipio(e.target.value)}
-              />
+            <label className="field-label">
+              Municipio
+              <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
-            <label className="text-sm">
+            <label className="field-label">
               UF
-              <input className="mt-1 w-full rounded-xl border px-3 py-2" value={uf} onChange={(e) => setUf(e.target.value)} />
+              <input className="input" value={uf} onChange={(e) => setUf(e.target.value)} />
             </label>
           </div>
         </>
@@ -294,14 +282,10 @@ export function InstitutionForm() {
 
       {lookupError ? <p className="text-sm text-coral">{lookupError}</p> : null}
 
-      <button
-        className="self-start rounded-full bg-ocean text-white px-5 py-2 disabled:opacity-50"
-        disabled={blocked || Boolean(lookupError)}
-      >
-        Cadastrar
+      <button className="self-start btn-primary" disabled={submitting || blocked || Boolean(lookupError)}>
+        {submitting ? "Cadastrando..." : "Cadastrar"}
       </button>
-
-      {status ? <p className="text-sm text-black/70">{status}</p> : null}
     </form>
   );
 }
+

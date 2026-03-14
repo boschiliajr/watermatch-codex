@@ -28,36 +28,64 @@ export function CompaniesTable() {
   }
 
   return (
-    <div className="card p-5">
-      <div className="flex items-center justify-between mb-3">
+    <div className="card p-6">
+      <div className="flex items-center justify-between mb-4">
         <h4 className="font-semibold">Empresas</h4>
         {loading ? <span className="text-xs text-black/50">Carregando...</span> : null}
       </div>
       <div className="overflow-auto">
-        <table className="w-full text-sm">
-          <thead className="text-left text-black/60">
+        <table className="table">
+          <thead className="thead text-left text-black/60">
             <tr>
-              <th className="py-2">Razão Social</th>
-              <th className="py-2">CNPJ</th>
-              <th className="py-2">Município</th>
-              <th className="py-2">UF</th>
-              <th className="py-2 text-right">Ações</th>
+              <th className="py-3 px-3">Razao Social</th>
+              <th className="py-3 px-3">CNPJ</th>
+              <th className="py-3 px-3">Municipio</th>
+              <th className="py-3 px-3">UF</th>
+              <th className="py-3 px-3 text-right">Acoes</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id} className="border-t">
-                <td className="py-2">{row.razao_social}</td>
-                <td className="py-2">{row.cnpj}</td>
-                <td className="py-2">{row.municipio}</td>
-                <td className="py-2">{row.uf}</td>
-                <td className="py-2 text-right">
-                  <button className="text-coral" onClick={() => setDeleteId(row.id)}>
-                    🗑
-                  </button>
+            {loading ? (
+              Array.from({ length: 4 }).map((_, idx) => (
+                <tr key={idx} className="tr animate-pulse">
+                  <td className="py-3 px-3">
+                    <div className="h-3 w-40 rounded bg-black/10" />
+                  </td>
+                  <td className="py-3 px-3">
+                    <div className="h-3 w-28 rounded bg-black/10" />
+                  </td>
+                  <td className="py-3 px-3">
+                    <div className="h-3 w-32 rounded bg-black/10" />
+                  </td>
+                  <td className="py-3 px-3">
+                    <div className="h-3 w-10 rounded bg-black/10" />
+                  </td>
+                  <td className="py-3 px-3 text-right">
+                    <div className="h-3 w-8 rounded bg-black/10 ml-auto" />
+                  </td>
+                </tr>
+              ))
+            ) : rows.length ? (
+              rows.map((row) => (
+                <tr key={row.id} className="tr">
+                  <td className="py-3 px-3">{row.razao_social}</td>
+                  <td className="py-3 px-3">{row.cnpj}</td>
+                  <td className="py-3 px-3">{row.municipio}</td>
+                  <td className="py-3 px-3">{row.uf}</td>
+                  <td className="py-3 px-3 text-right">
+                    <button className="text-coral hover:underline" onClick={() => setDeleteId(row.id)}>
+                      🗑
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="tr">
+                <td className="py-4 px-3 text-black/60" colSpan={5}>
+                  Nenhuma empresa cadastrada.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

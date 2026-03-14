@@ -1,16 +1,212 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
+  --bg: #f4efe6;
+  --surface: #ffffff;
+  --surface-2: #fff7ed;
+  --text: #1b1f2b;
+  --muted: rgba(27, 31, 43, 0.6);
+  --border: rgba(27, 31, 43, 0.10);
+  --accent: #0b5b7a;
+  --accent-2: #58a6c7;
+  --good: #0f766e;
+  --bad: #b42318;
 }
 
 body {
-  @apply bg-sand text-ink;
-  font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background: radial-gradient(1200px 700px at 20% 10%, rgba(88, 166, 199, 0.25), transparent 55%),
+    radial-gradient(900px 540px at 80% 0%, rgba(199, 242, 214, 0.45), transparent 50%),
+    linear-gradient(135deg, var(--bg), #ffffff 55%, rgba(199, 242, 214, 0.35));
+  color: var(--text);
 }
 
 .card {
-  @apply rounded-2xl bg-white shadow-sm border border-black/5;
+  @apply rounded-2xl bg-white shadow-sm;
+  border: 1px solid var(--border);
 }
+
+@layer components {
+  .app-bg {
+    @apply min-h-screen;
+  }
+
+  .app-frame {
+    @apply mx-auto max-w-[1200px] p-4 md:p-6;
+  }
+
+  .app-topbar {
+    @apply flex items-center gap-3 md:hidden mb-4;
+  }
+
+  .topbar-title {
+    @apply flex flex-col leading-tight;
+  }
+
+  .topbar-kicker {
+    @apply text-[10px] uppercase tracking-[0.25em] text-black/50;
+  }
+
+  .topbar-name {
+    @apply text-sm font-semibold;
+  }
+
+  .app-grid {
+    @apply grid gap-4 md:gap-6 md:grid-cols-[260px_1fr];
+  }
+
+  .app-main {
+    @apply min-w-0;
+  }
+
+  .sidebar {
+    @apply flex flex-col gap-6 p-6 rounded-3xl text-white;
+    background: linear-gradient(180deg, #1b1f2b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  }
+
+  .sidebar-kicker {
+    @apply text-xs uppercase tracking-[0.22em] text-white/60;
+  }
+
+  .sidebar-title {
+    @apply text-2xl font-semibold;
+    letter-spacing: -0.02em;
+  }
+
+  .sidebar-nav {
+    @apply flex flex-col gap-2 text-sm;
+  }
+
+  .nav-item {
+    @apply rounded-2xl px-4 py-2 transition-colors;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+  }
+
+  .nav-item-active {
+    background: rgba(199, 242, 214, 0.16);
+    color: #ffffff;
+  }
+
+  .sidebar-foot {
+    @apply mt-auto text-xs text-white/60;
+  }
+
+  .icon-btn {
+    @apply rounded-2xl px-4 py-2 text-sm bg-white/70 backdrop-blur border;
+    border-color: var(--border);
+  }
+
+  .drawer {
+    @apply fixed inset-0 z-50;
+  }
+
+  .drawer-backdrop {
+    @apply absolute inset-0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .drawer-panel {
+    @apply absolute left-3 right-3 top-3;
+  }
+
+  .page {
+    @apply flex flex-col gap-6;
+  }
+
+  .page-header {
+    @apply card p-6 flex flex-col gap-2;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.76));
+    backdrop-filter: blur(10px);
+  }
+
+  .kicker {
+    @apply text-xs uppercase tracking-[0.32em] text-black/50;
+  }
+
+  .page-title {
+    @apply text-2xl md:text-3xl font-semibold;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-black/60;
+  }
+
+  .field-label {
+    @apply text-sm font-medium;
+  }
+
+  .input {
+    @apply mt-1 w-full rounded-xl px-3 py-2 bg-white border outline-none;
+    border-color: var(--border);
+  }
+
+  .input:focus {
+    box-shadow: 0 0 0 4px rgba(88, 166, 199, 0.22);
+    border-color: rgba(11, 91, 122, 0.45);
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition;
+  }
+
+  .btn-primary {
+    @apply btn text-white;
+    background: linear-gradient(135deg, var(--accent), #0a3e54);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+
+  .thead {
+    @apply sticky top-0 bg-white/90 backdrop-blur;
+  }
+
+  .tr {
+    border-top: 1px solid var(--border);
+  }
+
+  .tr:nth-child(even) {
+    background: rgba(244, 239, 230, 0.35);
+  }
+
+  .toast-stack {
+    @apply fixed bottom-4 right-4 z-[60] flex flex-col gap-2;
+  }
+
+  .toast {
+    @apply rounded-2xl px-4 py-3 shadow-md border bg-white max-w-[320px];
+    border-color: var(--border);
+  }
+
+  .toast-title {
+    @apply text-xs uppercase tracking-[0.22em] text-black/60 mb-1;
+  }
+
+  .toast-message {
+    @apply text-sm;
+  }
+
+  .toast-success {
+    box-shadow: 0 10px 30px rgba(15, 118, 110, 0.16);
+  }
+
+  .toast-error {
+    box-shadow: 0 10px 30px rgba(180, 35, 24, 0.16);
+  }
+}
+

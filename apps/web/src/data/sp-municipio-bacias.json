@@ -1,0 +1,20 @@
+{
+  "uf": "SP",
+  "version": 1,
+  "source": "https://sigrh.sp.gov.br/municipios",
+  "updated_at": "2026-03-14",
+  "municipios": {
+    "sao jose dos campos": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "taubate": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "pindamonhangaba": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "cacapava": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "jacarei": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "guaratingueta": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "lorena": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "cruzeiro": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "ubatuba": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "caraguatatuba": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }],
+    "ilhabela": [{ "code": "CBH-PS", "ugrhi": 2, "name": "Paraiba do Sul" }]
+  }
+}
+

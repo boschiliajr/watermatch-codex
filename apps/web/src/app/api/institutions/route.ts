@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { lookupCnpj } from "@/lib/cnpjLookup";
 import { detectInstitutionKind, type InstitutionKind } from "@/lib/institutionKind";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { resolveBasinsByMunicipio } from "@/lib/bacias";
 
 function cleanCnpj(cnpj: string) {
   return cnpj.replace(/\D/g, "");
@@ -112,7 +113,9 @@ export async function POST(req: NextRequest) {
   const nome_prefeitura = String(body?.nome_prefeitura || "").trim();
   const municipio = String(body?.municipio || "").trim();
   const uf = String(body?.uf || "").trim();
-  const bacia_hidrografica = body?.bacia_hidrografica ? String(body.bacia_hidrografica).trim() : null;
+  const resolved = resolveBasinsByMunicipio({ uf, municipio });
+  const bacias_hidrograficas = resolved.bacias.map((b) => b.code);
+  const bacia_hidrografica = bacias_hidrograficas[0] ?? null; // compat with older column
 
   if (!nome_prefeitura || !municipio || !uf) {
     return NextResponse.json({ error: "Preencha nome da prefeitura, município e UF." }, { status: 400 });
@@ -123,7 +126,8 @@ export async function POST(req: NextRequest) {
     nome_prefeitura,
     municipio,
     uf,
-    bacia_hidrografica
+    bacia_hidrografica,
+    bacias_hidrograficas
   });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });

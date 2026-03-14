@@ -9,6 +9,7 @@ type LookupResponse = {
   municipio: string;
   uf: string;
   bacia_hidrografica: string | null;
+  bacias_hidrograficas?: Array<{ code: string; name?: string; ugrhi?: number }>;
   natureza_juridica?: { codigo?: string | null; descricao?: string | null } | null;
   cnae_principal?: { codigo?: string | null; descricao?: string | null } | null;
   source: "opencnpj" | "mock";
@@ -40,7 +41,7 @@ export function InstitutionForm() {
   const [municipio, setMunicipio] = useState("");
   const [uf, setUf] = useState("");
   const [tags, setTags] = useState("");
-  const [bacia, setBacia] = useState("");
+  const [bacias, setBacias] = useState<Array<{ code: string; name?: string; ugrhi?: number }>>([]);
 
   const [lookupError, setLookupError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -84,7 +85,7 @@ export function InstitutionForm() {
     setMunicipio(data.municipio || "");
     setUf(data.uf || "");
     setRazaoSocial(data.razao_social || "");
-    setBacia(data.bacia_hidrografica || "");
+    setBacias(data.bacias_hidrograficas || []);
 
     if (data.kind === "municipality") {
       setKind("municipality");
@@ -142,8 +143,7 @@ export function InstitutionForm() {
             cnpj: digits,
             nome_prefeitura: nomePrefeitura,
             municipio,
-            uf,
-            bacia_hidrografica: bacia || null
+            uf
           };
 
     const res = await fetch("/api/institutions", {
@@ -167,7 +167,7 @@ export function InstitutionForm() {
     setMunicipio("");
     setUf("");
     setTags("");
-    setBacia("");
+    setBacias([]);
     setLookupError(null);
     setLookupMeta(null);
   }
@@ -259,15 +259,21 @@ export function InstitutionForm() {
                 onChange={(e) => setNomePrefeitura(e.target.value)}
               />
             </label>
-            <label className="text-sm">
-              Bacia Hidrográfica
-              <input
-                className="mt-1 w-full rounded-xl border px-3 py-2"
-                value={bacia}
-                onChange={(e) => setBacia(e.target.value)}
-                placeholder="CBH-PS"
-              />
-            </label>
+            <div className="text-sm">
+              <p>Bacias Hidrográficas (auto)</p>
+              <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-sand flex flex-wrap gap-2 items-center">
+                {bacias.length ? (
+                  bacias.map((b) => (
+                    <span key={b.code} className="text-xs rounded-full bg-white border px-3 py-1">
+                      {b.code}
+                      {b.name ? ` · ${b.name}` : ""}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs text-black/50">Não encontrado</span>
+                )}
+              </div>
+            </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <label className="text-sm">

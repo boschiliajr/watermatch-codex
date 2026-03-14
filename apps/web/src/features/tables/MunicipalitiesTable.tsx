@@ -13,7 +13,7 @@ export function MunicipalitiesTable() {
     setLoading(true);
     const { data } = await supabaseBrowser
       .from("municipalities")
-      .select("id, nome_prefeitura, cnpj, municipio, uf, bacia_hidrografica");
+      .select("id, nome_prefeitura, cnpj, municipio, uf, bacias_hidrograficas");
     setRows(data || []);
     setLoading(false);
   }
@@ -43,7 +43,7 @@ export function MunicipalitiesTable() {
               <th className="py-2">CNPJ</th>
               <th className="py-2">Município</th>
               <th className="py-2">UF</th>
-              <th className="py-2">Bacia</th>
+              <th className="py-2">Bacias</th>
               <th className="py-2 text-right">Ações</th>
             </tr>
           </thead>
@@ -54,7 +54,7 @@ export function MunicipalitiesTable() {
                 <td className="py-2">{row.cnpj}</td>
                 <td className="py-2">{row.municipio}</td>
                 <td className="py-2">{row.uf}</td>
-                <td className="py-2">{row.bacia_hidrografica}</td>
+                <td className="py-2">{Array.isArray(row.bacias_hidrograficas) ? row.bacias_hidrograficas.join(", ") : ""}</td>
                 <td className="py-2 text-right">
                   <button className="text-coral" onClick={() => setDeleteId(row.id)}>
                     🗑

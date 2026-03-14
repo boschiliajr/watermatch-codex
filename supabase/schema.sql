@@ -19,6 +19,7 @@ create table if not exists municipalities (
   municipio text not null,
   uf text not null,
   bacia_hidrografica text,
+  bacias_hidrograficas text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 

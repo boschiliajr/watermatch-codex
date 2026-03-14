@@ -11,7 +11,7 @@ export function CompaniesTable() {
 
   async function load() {
     setLoading(true);
-    const { data } = await supabaseBrowser.from("companies").select("id, cnpj, razao_social, municipio, uf");
+    const { data } = await supabaseBrowser.from("companies").select("id, cnpj, razao_social, municipio, uf, tags_produtos_servicos");
     setRows(data || []);
     setLoading(false);
   }
@@ -37,11 +37,11 @@ export function CompaniesTable() {
         <table className="table">
           <thead className="thead text-left text-black/60">
             <tr>
-              <th className="py-3 px-3">Razao Social</th>
               <th className="py-3 px-3">CNPJ</th>
-              <th className="py-3 px-3">Municipio</th>
-              <th className="py-3 px-3">UF</th>
-              <th className="py-3 px-3 text-right">Acoes</th>
+              <th className="py-3 px-3">Razão social</th>
+              <th className="py-3 px-3">Município</th>
+              <th className="py-3 px-3">Tags</th>
+              <th className="py-3 px-3 text-right">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -49,16 +49,16 @@ export function CompaniesTable() {
               Array.from({ length: 4 }).map((_, idx) => (
                 <tr key={idx} className="tr animate-pulse">
                   <td className="py-3 px-3">
-                    <div className="h-3 w-40 rounded bg-black/10" />
+                    <div className="h-3 w-28 rounded bg-black/10" />
                   </td>
                   <td className="py-3 px-3">
-                    <div className="h-3 w-28 rounded bg-black/10" />
+                    <div className="h-3 w-44 rounded bg-black/10" />
                   </td>
                   <td className="py-3 px-3">
                     <div className="h-3 w-32 rounded bg-black/10" />
                   </td>
                   <td className="py-3 px-3">
-                    <div className="h-3 w-10 rounded bg-black/10" />
+                    <div className="h-3 w-40 rounded bg-black/10" />
                   </td>
                   <td className="py-3 px-3 text-right">
                     <div className="h-3 w-8 rounded bg-black/10 ml-auto" />
@@ -68,10 +68,18 @@ export function CompaniesTable() {
             ) : rows.length ? (
               rows.map((row) => (
                 <tr key={row.id} className="tr">
-                  <td className="py-3 px-3">{row.razao_social}</td>
                   <td className="py-3 px-3">{row.cnpj}</td>
+                  <td className="py-3 px-3">{row.razao_social}</td>
                   <td className="py-3 px-3">{row.municipio}</td>
-                  <td className="py-3 px-3">{row.uf}</td>
+                  <td className="py-3 px-3">
+                    <div className="flex flex-wrap gap-2">
+                      {(row.tags_produtos_servicos || []).slice(0, 4).map((t: string) => (
+                        <span key={t} className="chip">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
                   <td className="py-3 px-3 text-right">
                     <button className="text-coral hover:underline" onClick={() => setDeleteId(row.id)}>
                       🗑

@@ -57,7 +57,7 @@ export function ProjectForm() {
           <input className="input" value={matchId} onChange={(e) => setMatchId(e.target.value)} />
         </label>
         <label className="field-label">
-          Titulo
+          Título
           <input className="input" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
         </label>
       </div>
@@ -86,4 +86,3 @@ export function ProjectForm() {
     </form>
   );
 }
-

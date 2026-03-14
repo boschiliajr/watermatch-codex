@@ -27,15 +27,23 @@ function cleanCnpj(cnpj: string) {
 function formatKind(kind: Kind) {
   if (kind === "company") return "Empresa";
   if (kind === "municipality") return "Prefeitura";
-  if (kind === "government_other") return "Orgao publico (nao prefeitura)";
+  if (kind === "government_other") return "Órgão público (não prefeitura)";
   return "Indefinido";
 }
 
-export function InstitutionForm() {
+export function InstitutionForm({
+  fixedKind,
+  hideKindSelect,
+  onSuccess
+}: {
+  fixedKind?: "company" | "municipality";
+  hideKindSelect?: boolean;
+  onSuccess?: () => void;
+}) {
   const toast = useToast();
 
   const [cnpj, setCnpj] = useState("");
-  const [kind, setKind] = useState<"company" | "municipality">("company");
+  const [kind, setKind] = useState<"company" | "municipality">(fixedKind ?? "company");
 
   const [suggestedKind, setSuggestedKind] = useState<Kind | null>(null);
   const [kindReason, setKindReason] = useState<string | null>(null);
@@ -91,25 +99,43 @@ export function InstitutionForm() {
     setRazaoSocial(data.razao_social || "");
     setBacias(data.bacias_hidrograficas || []);
 
+    const desiredKind = fixedKind ?? kind;
+    if (!fixedKind) {
+      if (data.kind === "municipality") {
+        setKind("municipality");
+      } else if (data.kind === "company") {
+        setKind("company");
+      }
+    }
+
     if (data.kind === "municipality") {
-      setKind("municipality");
       setNomePrefeitura((data.razao_social || `Prefeitura de ${data.municipio || ""}`).trim());
-    } else if (data.kind === "company") {
-      setKind("company");
-      setNomePrefeitura("");
     } else {
       setNomePrefeitura("");
     }
 
     if (data.kind === "government_other") {
       setLookupError(
-        "Este CNPJ parece ser de um orgao publico que nao e prefeitura/municipio. Por enquanto, o cadastro e bloqueado."
+        "Este CNPJ parece ser de um órgão público que não é prefeitura/município. Por enquanto, o cadastro é bloqueado."
       );
-    } else if (data.kind === "unknown") {
-      setLookupError("Nao foi possivel determinar se este CNPJ e de empresa ou prefeitura. Tente novamente.");
-    } else {
-      setLookupError(null);
+      return;
     }
+
+    if (data.kind === "unknown") {
+      setLookupError("Não foi possível determinar se este CNPJ é de empresa ou prefeitura. Tente novamente.");
+      return;
+    }
+
+    if (data.kind !== desiredKind) {
+      setLookupError(
+        data.kind === "municipality"
+          ? "Este CNPJ parece ser de uma prefeitura. Use o cadastro de Prefeitura."
+          : "Este CNPJ parece ser de uma empresa. Use o cadastro de Empresa."
+      );
+      return;
+    }
+
+    setLookupError(null);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -123,14 +149,15 @@ export function InstitutionForm() {
 
     const digits = cleanCnpj(cnpj);
     if (digits.length !== 14) {
-      toast.push({ kind: "error", title: "CNPJ", message: "CNPJ invalido (precisa ter 14 digitos)." });
+      toast.push({ kind: "error", title: "CNPJ", message: "CNPJ inválido (precisa ter 14 dígitos)." });
       return;
     }
 
+    const desiredKind = fixedKind ?? kind;
     const payload =
-      kind === "company"
+      desiredKind === "company"
         ? {
-            kind,
+            kind: "company",
             cnpj: digits,
             razao_social: razaoSocial,
             municipio,
@@ -141,7 +168,7 @@ export function InstitutionForm() {
               .filter(Boolean)
           }
         : {
-            kind,
+            kind: "municipality",
             cnpj: digits,
             nome_prefeitura: nomePrefeitura,
             municipio,
@@ -165,8 +192,10 @@ export function InstitutionForm() {
       toast.push({
         kind: "success",
         title: "Cadastro",
-        message: kind === "company" ? "Empresa cadastrada com sucesso." : "Prefeitura cadastrada com sucesso."
+        message: desiredKind === "company" ? "Empresa cadastrada com sucesso." : "Prefeitura cadastrada com sucesso."
       });
+
+      onSuccess?.();
 
       setCnpj("");
       setSuggestedKind(null);
@@ -184,56 +213,65 @@ export function InstitutionForm() {
     }
   }
 
-  return (
-    <form className="card p-6 flex flex-col gap-5" onSubmit={handleSubmit}>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="kicker">Cadastro</p>
-          <h3 className="text-xl font-semibold">Instituicao</h3>
-          <p className="text-sm text-black/60">A consulta determina o tipo e preenche dados basicos.</p>
-        </div>
-      </div>
+  const showKindSelect = !hideKindSelect && !fixedKind;
 
+  return (
+    <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
       <div className="grid gap-3 md:grid-cols-2">
         <label className="field-label">
           CNPJ
-          <input className="input" value={cnpj} onChange={(e) => setCnpj(e.target.value)} onBlur={handleLookup} placeholder="00.000.000/0000-00" />
+          <input
+            className="input"
+            value={cnpj}
+            onChange={(e) => setCnpj(e.target.value)}
+            onBlur={handleLookup}
+            placeholder="00.000.000/0000-00"
+          />
         </label>
 
-        <label className="field-label">
-          Tipo
-          <select className="input" value={kind} onChange={(e) => setKind(e.target.value as any)} disabled={blocked}>
-            <option value="company">Empresa</option>
-            <option value="municipality">Prefeitura</option>
-          </select>
-        </label>
+        {showKindSelect ? (
+          <label className="field-label">
+            Tipo
+            <select className="input" value={kind} onChange={(e) => setKind(e.target.value as any)} disabled={blocked}>
+              <option value="company">Empresa</option>
+              <option value="municipality">Prefeitura</option>
+            </select>
+          </label>
+        ) : (
+          <div className="field-label">
+            <p>Tipo</p>
+            <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-white flex items-center" style={{ borderColor: "var(--border)" }}>
+              <span className="text-sm">{fixedKind ? (fixedKind === "company" ? "Empresa" : "Prefeitura") : kind === "company" ? "Empresa" : "Prefeitura"}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {suggestedKind ? (
         <p className="text-xs text-black/60">
-          Sugestao do sistema: <span className="font-semibold">{formatKind(suggestedKind)}</span>
+          Sugestão do sistema: <span className="font-semibold">{formatKind(suggestedKind)}</span>
           {kindReason ? ` (${kindReason})` : null}
-          {lookupMeta?.source ? ` · fonte: ${lookupMeta.source}` : null}
-          {lookupMeta?.natureza ? ` · natureza: ${lookupMeta.natureza}` : null}
-          {lookupMeta?.cnae ? ` · CNAE: ${lookupMeta.cnae}` : null}
+          {lookupMeta?.source ? ` - fonte: ${lookupMeta.source}` : null}
+          {lookupMeta?.natureza ? ` - natureza: ${lookupMeta.natureza}` : null}
+          {lookupMeta?.cnae ? ` - CNAE: ${lookupMeta.cnae}` : null}
         </p>
       ) : null}
 
-      {kind === "company" ? (
+      {(fixedKind ?? kind) === "company" ? (
         <>
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Razao social
+              Razão social
               <input className="input" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
             </label>
             <label className="field-label">
-              Tags (separadas por virgula)
+              Tags (separadas por vírgula)
               <input className="input" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="T.3.1.2, drenagem, reuso" />
             </label>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Municipio
+              Município
               <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
             <label className="field-label">
@@ -252,16 +290,15 @@ export function InstitutionForm() {
 
             <div className="field-label">
               <p>Bacias (auto)</p>
-              <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-[var(--surface-2)] flex flex-wrap gap-2 items-center">
+              <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-white flex flex-wrap gap-2 items-center" style={{ borderColor: "var(--border)" }}>
                 {bacias.length ? (
                   bacias.map((b) => (
-                    <span key={b.code} className="text-xs rounded-full bg-white border px-3 py-1">
+                    <span key={b.code} className="text-xs rounded-full border px-3 py-1 bg-[var(--primary-weak)] text-[var(--primary)]" style={{ borderColor: "var(--border)" }}>
                       {b.code}
-                      {b.name ? ` · ${b.name}` : ""}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-black/50">Nao encontrado</span>
+                  <span className="text-xs text-black/50">Não encontrado</span>
                 )}
               </div>
             </div>
@@ -269,7 +306,7 @@ export function InstitutionForm() {
 
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Municipio
+              Município
               <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
             <label className="field-label">

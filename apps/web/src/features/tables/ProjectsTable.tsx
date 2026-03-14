@@ -39,11 +39,11 @@ export function ProjectsTable() {
         <table className="table">
           <thead className="thead text-left text-black/60">
             <tr>
-              <th className="py-3 px-3">Titulo</th>
+              <th className="py-3 px-3">Título</th>
               <th className="py-3 px-3">Custo</th>
               <th className="py-3 px-3">Margem</th>
               <th className="py-3 px-3">Total</th>
-              <th className="py-3 px-3 text-right">Acoes</th>
+              <th className="py-3 px-3 text-right">Ações</th>
             </tr>
           </thead>
           <tbody>

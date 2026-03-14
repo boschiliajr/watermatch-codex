@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { ProjectsTable } from "@/features/tables/ProjectsTable";
+import { CompaniesTable } from "@/features/tables/CompaniesTable";
 import { Modal } from "@/components/Modal";
-import { ProjectForm } from "@/features/projects/ProjectForm";
+import { InstitutionForm } from "@/features/institutions/InstitutionForm";
+import { supabaseBrowser } from "@/lib/supabaseBrowser";
 
-export default function ProjetosPage() {
+export default function EmpresasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
 
   async function refreshCount() {
-    const res = await supabaseBrowser.from("projects").select("id", { count: "exact", head: true });
+    const res = await supabaseBrowser.from("companies").select("id", { count: "exact", head: true });
     setCount(res.count ?? 0);
   }
 
@@ -24,28 +24,27 @@ export default function ProjetosPage() {
       <header className="page-header">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="page-title">Projetos</h2>
-            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} projetos gerados`}</p>
+            <h2 className="page-title">Empresas</h2>
+            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} empresas cadastradas`}</p>
           </div>
           <button className="btn-primary" type="button" onClick={() => setOpen(true)}>
-            Novo projeto
+            Cadastrar empresa
           </button>
         </div>
       </header>
 
-      <ProjectsTable />
+      <CompaniesTable />
 
       <Modal
         open={open}
-        title="Novo Projeto"
+        title="Cadastrar Empresa"
         onClose={() => {
           setOpen(false);
           refreshCount();
         }}
       >
-        <ProjectForm />
+        <InstitutionForm fixedKind="company" hideKindSelect onSuccess={() => setOpen(false)} />
       </Modal>
     </div>
   );
 }
-

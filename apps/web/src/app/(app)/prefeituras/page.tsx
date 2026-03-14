@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { ProjectsTable } from "@/features/tables/ProjectsTable";
+import { MunicipalitiesTable } from "@/features/tables/MunicipalitiesTable";
 import { Modal } from "@/components/Modal";
-import { ProjectForm } from "@/features/projects/ProjectForm";
+import { InstitutionForm } from "@/features/institutions/InstitutionForm";
+import { supabaseBrowser } from "@/lib/supabaseBrowser";
 
-export default function ProjetosPage() {
+export default function PrefeiturasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
 
   async function refreshCount() {
-    const res = await supabaseBrowser.from("projects").select("id", { count: "exact", head: true });
+    const res = await supabaseBrowser.from("municipalities").select("id", { count: "exact", head: true });
     setCount(res.count ?? 0);
   }
 
@@ -24,26 +24,26 @@ export default function ProjetosPage() {
       <header className="page-header">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="page-title">Projetos</h2>
-            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} projetos gerados`}</p>
+            <h2 className="page-title">Prefeituras</h2>
+            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} prefeituras cadastradas`}</p>
           </div>
           <button className="btn-primary" type="button" onClick={() => setOpen(true)}>
-            Novo projeto
+            Cadastrar prefeitura
           </button>
         </div>
       </header>
 
-      <ProjectsTable />
+      <MunicipalitiesTable />
 
       <Modal
         open={open}
-        title="Novo Projeto"
+        title="Cadastrar Prefeitura"
         onClose={() => {
           setOpen(false);
           refreshCount();
         }}
       >
-        <ProjectForm />
+        <InstitutionForm fixedKind="municipality" hideKindSelect onSuccess={() => setOpen(false)} />
       </Modal>
     </div>
   );

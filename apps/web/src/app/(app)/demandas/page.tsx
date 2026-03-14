@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { ProjectsTable } from "@/features/tables/ProjectsTable";
+import { DemandsTable } from "@/features/tables/DemandsTable";
 import { Modal } from "@/components/Modal";
-import { ProjectForm } from "@/features/projects/ProjectForm";
+import { DemandForm } from "@/features/demands/DemandForm";
+import { supabaseBrowser } from "@/lib/supabaseBrowser";
 
-export default function ProjetosPage() {
+export default function DemandasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
 
   async function refreshCount() {
-    const res = await supabaseBrowser.from("projects").select("id", { count: "exact", head: true });
+    const res = await supabaseBrowser.from("demands").select("id", { count: "exact", head: true });
     setCount(res.count ?? 0);
   }
 
@@ -24,26 +24,26 @@ export default function ProjetosPage() {
       <header className="page-header">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="page-title">Projetos</h2>
-            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} projetos gerados`}</p>
+            <h2 className="page-title">Demandas</h2>
+            <p className="page-subtitle">{count === null ? "Carregando..." : `${count} demandas cadastradas`}</p>
           </div>
           <button className="btn-primary" type="button" onClick={() => setOpen(true)}>
-            Novo projeto
+            Nova demanda
           </button>
         </div>
       </header>
 
-      <ProjectsTable />
+      <DemandsTable />
 
       <Modal
         open={open}
-        title="Novo Projeto"
+        title="Nova Demanda"
         onClose={() => {
           setOpen(false);
           refreshCount();
         }}
       >
-        <ProjectForm />
+        <DemandForm onSuccess={() => setOpen(false)} />
       </Modal>
     </div>
   );

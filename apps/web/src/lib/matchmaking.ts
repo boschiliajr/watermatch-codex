@@ -3,7 +3,8 @@
 type DemandRow = {
   id: string;
   status: string;
-  tipologia_sugerida: { id: string; tipologia_codigo: string } | null;
+  // Supabase can return either an object or a single-element array depending on relationship metadata.
+  tipologia_sugerida: { id: string; tipologia_codigo: string } | Array<{ id: string; tipologia_codigo: string }> | null;
 };
 
 type CompanyRow = {
@@ -32,7 +33,10 @@ export async function runMatchmaking() {
   const matchesToInsert = [] as Array<{ demand_id: string; company_id: string; score_compatibilidade: number }>;
 
   for (const demand of (demands || []) as DemandRow[]) {
-    const tipologia = demand.tipologia_sugerida?.tipologia_codigo;
+    const tipologiaRow = Array.isArray(demand.tipologia_sugerida)
+      ? demand.tipologia_sugerida[0] ?? null
+      : demand.tipologia_sugerida;
+    const tipologia = tipologiaRow?.tipologia_codigo;
     if (!tipologia) continue;
 
     for (const company of (companies || []) as CompanyRow[]) {

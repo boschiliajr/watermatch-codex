@@ -9,10 +9,12 @@ export function CompanyForm() {
   const [municipio, setMunicipio] = useState("");
   const [uf, setUf] = useState("");
   const [tags, setTags] = useState("");
+  const [lookupError, setLookupError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
   async function handleLookup() {
     if (!cnpj) return;
+    setLookupError(null);
     const res = await fetch("/api/lookup-cnpj", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -21,14 +23,27 @@ export function CompanyForm() {
 
     if (!res.ok) return;
     const data = await res.json();
-    setRazaoSocial(data.razao_social || "");
-    setMunicipio(data.municipio || "");
-    setUf(data.uf || "");
+    const razao = data.razao_social || "";
+    const municipioLookup = data.municipio || "";
+    const ufLookup = data.uf || "";
+
+    if (razao.toLowerCase().includes("prefeitura")) {
+      setLookupError("Este CNPJ parece ser de uma prefeitura. Use o cadastro de Prefeituras.");
+      setRazaoSocial("");
+      setMunicipio("");
+      setUf("");
+      return;
+    }
+
+    setRazaoSocial(razao);
+    setMunicipio(municipioLookup);
+    setUf(ufLookup);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus(null);
+    if (lookupError) return;
 
     const { error } = await supabaseBrowser.from("companies").insert({
       cnpj,
@@ -102,7 +117,13 @@ export function CompanyForm() {
           placeholder="T.3.1.2, drenagem, reuso"
         />
       </label>
-      <button className="self-start rounded-full bg-ocean text-white px-5 py-2">Cadastrar</button>
+      {lookupError ? <p className="text-sm text-coral">{lookupError}</p> : null}
+      <button
+        className="self-start rounded-full bg-ocean text-white px-5 py-2 disabled:opacity-50"
+        disabled={Boolean(lookupError)}
+      >
+        Cadastrar
+      </button>
       {status ? <p className="text-sm text-black/70">{status}</p> : null}
     </form>
   );

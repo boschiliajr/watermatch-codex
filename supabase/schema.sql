@@ -66,3 +66,14 @@ create index if not exists idx_demands_tipologia_sugerida on demands(tipologia_s
 create index if not exists idx_matches_demand_id on matches(demand_id);
 create index if not exists idx_matches_company_id on matches(company_id);
 create index if not exists idx_projects_match_id on projects(match_id);
+
+-- RLS hardening: allow public reads for dashboards, block direct writes from anon clients.
+-- NOTE: apply this in Supabase SQL editor/migrations for your project.
+alter table companies enable row level security;
+alter table municipalities enable row level security;
+
+drop policy if exists "Public read companies" on companies;
+create policy "Public read companies" on companies for select using (true);
+
+drop policy if exists "Public read municipalities" on municipalities;
+create policy "Public read municipalities" on municipalities for select using (true);

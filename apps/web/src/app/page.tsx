@@ -1,7 +1,6 @@
 ﻿import { Sidebar } from "@/components/Sidebar";
 import { StatsCards } from "@/components/StatsCards";
-import { CompanyForm } from "@/features/companies/CompanyForm";
-import { MunicipalityForm } from "@/features/municipalities/MunicipalityForm";
+import { InstitutionForm } from "@/features/institutions/InstitutionForm";
 import { ProjectForm } from "@/features/projects/ProjectForm";
 import { CompaniesTable } from "@/features/tables/CompaniesTable";
 import { DemandsTable } from "@/features/tables/DemandsTable";
@@ -23,8 +22,7 @@ export default function HomePage() {
           </section>
 
           <section id="cadastros" className="grid gap-6 lg:grid-cols-2">
-            <CompanyForm />
-            <MunicipalityForm />
+            <InstitutionForm />
           </section>
 
           <section id="projetos" className="grid gap-6">

@@ -24,7 +24,7 @@ export function MunicipalitiesTable() {
 
   async function handleDelete() {
     if (!deleteId) return;
-    await supabaseBrowser.from("municipalities").delete().eq("id", deleteId);
+    await fetch(`/api/institutions/municipality/${deleteId}`, { method: "DELETE" });
     setDeleteId(null);
     load();
   }

@@ -22,7 +22,7 @@ export function CompaniesTable() {
 
   async function handleDelete() {
     if (!deleteId) return;
-    await supabaseBrowser.from("companies").delete().eq("id", deleteId);
+    await fetch(`/api/institutions/company/${deleteId}`, { method: "DELETE" });
     setDeleteId(null);
     load();
   }

@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
+import { apiClient } from "@/lib/apiClient";
 
 export function CompanyForm() {
   const [cnpj, setCnpj] = useState("");
@@ -45,19 +45,22 @@ export function CompanyForm() {
     setStatus(null);
     if (lookupError) return;
 
-    const { error } = await supabaseBrowser.from("companies").insert({
-      cnpj,
-      razao_social: razaoSocial,
-      municipio,
-      uf,
-      tags_produtos_servicos: tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean)
-    });
-
-    if (error) {
-      setStatus(error.message);
+    try {
+      await apiClient("/api/companies", {
+        method: "POST",
+        body: {
+          cnpj,
+          razao_social: razaoSocial,
+          municipio,
+          uf,
+          tags_produtos_servicos: tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        }
+      });
+    } catch (error) {
+      setStatus((error as Error).message);
       return;
     }
 

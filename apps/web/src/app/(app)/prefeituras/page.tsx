@@ -9,6 +9,7 @@ import { supabaseBrowser } from "@/lib/supabaseBrowser";
 export default function PrefeiturasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   async function refreshCount() {
     const res = await supabaseBrowser.from("municipalities").select("id", { count: "exact", head: true });
@@ -18,6 +19,12 @@ export default function PrefeiturasPage() {
   useEffect(() => {
     refreshCount();
   }, []);
+
+  function handleCreated() {
+    setOpen(false);
+    refreshCount();
+    setRefreshKey((v) => v + 1);
+  }
 
   return (
     <div className="page">
@@ -33,17 +40,16 @@ export default function PrefeiturasPage() {
         </div>
       </header>
 
-      <MunicipalitiesTable />
+      <MunicipalitiesTable refreshKey={refreshKey} />
 
       <Modal
         open={open}
         title="Cadastrar Prefeitura"
         onClose={() => {
           setOpen(false);
-          refreshCount();
         }}
       >
-        <InstitutionForm fixedKind="municipality" hideKindSelect onSuccess={() => setOpen(false)} />
+        <InstitutionForm fixedKind="municipality" hideKindSelect onSuccess={handleCreated} />
       </Modal>
     </div>
   );

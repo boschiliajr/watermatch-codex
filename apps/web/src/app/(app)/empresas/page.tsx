@@ -9,6 +9,7 @@ import { supabaseBrowser } from "@/lib/supabaseBrowser";
 export default function EmpresasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   async function refreshCount() {
     const res = await supabaseBrowser.from("companies").select("id", { count: "exact", head: true });
@@ -18,6 +19,12 @@ export default function EmpresasPage() {
   useEffect(() => {
     refreshCount();
   }, []);
+
+  function handleCreated() {
+    setOpen(false);
+    refreshCount();
+    setRefreshKey((v) => v + 1);
+  }
 
   return (
     <div className="page">
@@ -33,17 +40,16 @@ export default function EmpresasPage() {
         </div>
       </header>
 
-      <CompaniesTable />
+      <CompaniesTable refreshKey={refreshKey} />
 
       <Modal
         open={open}
         title="Cadastrar Empresa"
         onClose={() => {
           setOpen(false);
-          refreshCount();
         }}
       >
-        <InstitutionForm fixedKind="company" hideKindSelect onSuccess={() => setOpen(false)} />
+        <InstitutionForm fixedKind="company" hideKindSelect onSuccess={handleCreated} />
       </Modal>
     </div>
   );

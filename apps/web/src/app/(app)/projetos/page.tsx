@@ -9,6 +9,7 @@ import { ProjectForm } from "@/features/projects/ProjectForm";
 export default function ProjetosPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   async function refreshCount() {
     const res = await supabaseBrowser.from("projects").select("id", { count: "exact", head: true });
@@ -18,6 +19,12 @@ export default function ProjetosPage() {
   useEffect(() => {
     refreshCount();
   }, []);
+
+  function handleCreated() {
+    setOpen(false);
+    refreshCount();
+    setRefreshKey((v) => v + 1);
+  }
 
   return (
     <div className="page">
@@ -33,17 +40,16 @@ export default function ProjetosPage() {
         </div>
       </header>
 
-      <ProjectsTable />
+      <ProjectsTable refreshKey={refreshKey} />
 
       <Modal
         open={open}
         title="Novo Projeto"
         onClose={() => {
           setOpen(false);
-          refreshCount();
         }}
       >
-        <ProjectForm />
+        <ProjectForm onSuccess={handleCreated} />
       </Modal>
     </div>
   );

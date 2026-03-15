@@ -1,72 +1,71 @@
-﻿"use client";
+"use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { DeleteConfirmModal } from "@/components/DeleteConfirmModal";
+import { apiClient } from "@/lib/apiClient";
 
-export function ProjectsTable() {
+const PAGE_SIZE = 10;
+
+export function ProjectsTable({ refreshKey = 0 }: { refreshKey?: number }) {
   const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabaseBrowser
+    let q = supabaseBrowser
       .from("projects")
-      .select("id, titulo, valor_custo_empresa, margem_pit_percentual, valor_total_fehidro");
+      .select("id, titulo, valor_custo_empresa, margem_pit_percentual, valor_total_fehidro")
+      .order("created_at", { ascending: false })
+      .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+    if (query.trim()) q = q.ilike("titulo", `%${query}%`);
+    const { data } = await q;
     setRows(data || []);
     setLoading(false);
-  }
+  }, [page, query, refreshKey]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [refreshKey]);
 
   async function handleDelete() {
     if (!deleteId) return;
-    await supabaseBrowser.from("projects").delete().eq("id", deleteId);
+    await apiClient(`/api/projects/${deleteId}`, { method: "DELETE" });
     setDeleteId(null);
     load();
   }
 
   return (
     <div className="card p-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-3">
         <h4 className="font-semibold">Projetos</h4>
-        {loading ? <span className="text-xs text-black/50">Carregando...</span> : null}
+        <input className="input max-w-[280px] mt-0" placeholder="Filtrar por titulo" value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
       <div className="overflow-auto">
         <table className="table">
           <thead className="thead text-left text-black/60">
             <tr>
-              <th className="py-3 px-3">Título</th>
+              <th className="py-3 px-3">Titulo</th>
               <th className="py-3 px-3">Custo</th>
               <th className="py-3 px-3">Margem</th>
               <th className="py-3 px-3">Total</th>
-              <th className="py-3 px-3 text-right">Ações</th>
+              <th className="py-3 px-3 text-right">Acoes</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              Array.from({ length: 3 }).map((_, idx) => (
-                <tr key={idx} className="tr animate-pulse">
-                  <td className="py-3 px-3">
-                    <div className="h-3 w-52 rounded bg-black/10" />
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="h-3 w-16 rounded bg-black/10" />
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="h-3 w-16 rounded bg-black/10" />
-                  </td>
-                  <td className="py-3 px-3">
-                    <div className="h-3 w-20 rounded bg-black/10" />
-                  </td>
-                  <td className="py-3 px-3 text-right">
-                    <div className="h-3 w-8 rounded bg-black/10 ml-auto" />
-                  </td>
-                </tr>
-              ))
+              <tr className="tr">
+                <td className="py-4 px-3 text-black/60" colSpan={5}>
+                  Carregando...
+                </td>
+              </tr>
             ) : rows.length ? (
               rows.map((row) => (
                 <tr key={row.id} className="tr">
@@ -76,7 +75,7 @@ export function ProjectsTable() {
                   <td className="py-3 px-3">{row.valor_total_fehidro}</td>
                   <td className="py-3 px-3 text-right">
                     <button className="text-coral hover:underline" onClick={() => setDeleteId(row.id)}>
-                    🗑
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -91,12 +90,15 @@ export function ProjectsTable() {
           </tbody>
         </table>
       </div>
-      <DeleteConfirmModal
-        open={Boolean(deleteId)}
-        title="Eliminar projeto"
-        onCancel={() => setDeleteId(null)}
-        onConfirm={handleDelete}
-      />
+      <div className="flex justify-end gap-2 mt-3">
+        <button className="btn" disabled={page === 0} onClick={() => setPage((p) => Math.max(0, p - 1))}>
+          Anterior
+        </button>
+        <button className="btn" disabled={rows.length < PAGE_SIZE} onClick={() => setPage((p) => p + 1)}>
+          Proxima
+        </button>
+      </div>
+      <DeleteConfirmModal open={Boolean(deleteId)} title="Eliminar projeto" onCancel={() => setDeleteId(null)} onConfirm={handleDelete} />
     </div>
   );
 }

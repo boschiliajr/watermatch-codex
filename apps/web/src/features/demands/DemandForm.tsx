@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useToast } from "@/components/Toast";
 import { suggestTipologia } from "@watertech/shared";
+import { apiClient } from "@/lib/apiClient";
 
 type MunicipalityOption = { id: string; municipio: string; uf: string };
 
@@ -47,33 +48,21 @@ export function DemandForm({ onSuccess }: { onSuccess?: () => void }) {
 
     setSubmitting(true);
     try {
-      let tipologiaId: string | null = null;
-      if (tipologia) {
-        const { data } = await supabaseBrowser
-          .from("fehidro_dictionary")
-          .select("id")
-          .eq("tipologia_codigo", tipologia)
-          .limit(1)
-          .maybeSingle();
-        tipologiaId = (data as any)?.id ?? null;
-      }
-
-      const { error } = await supabaseBrowser.from("demands").insert({
+      await apiClient("/api/demands", {
+        method: "POST",
+        body: {
         municipality_id: municipalityId,
         descricao_problema: descricao.trim(),
-        tipologia_sugerida: tipologiaId,
         status: "open"
+        }
       });
-
-      if (error) {
-        toast.push({ kind: "error", title: "Demanda", message: error.message });
-        return;
-      }
 
       toast.push({ kind: "success", title: "Demanda", message: "Demanda criada com sucesso." });
       setMunicipalityId("");
       setDescricao("");
       onSuccess?.();
+    } catch (error) {
+      toast.push({ kind: "error", title: "Demanda", message: (error as Error).message || "Falha ao criar demanda." });
     } finally {
       setSubmitting(false);
     }

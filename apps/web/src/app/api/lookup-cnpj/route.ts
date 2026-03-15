@@ -1,15 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiError, apiOk } from "@/lib/api";
 
 import { lookupCnpj } from "@/lib/cnpjLookup";
 import { detectInstitutionKind } from "@/lib/institutionKind";
 import { resolveBasinsByMunicipio } from "@/lib/bacias";
 
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const cnpj = String(body?.cnpj || "");
+export async function POST(req: Request) {
+  let body: any = {};
+  try {
+    body = await req.json();
+  } catch {
+    return apiError("INVALID_JSON", "Corpo da requisicao invalido.", 400);
+  }
 
+  const cnpj = String(body?.cnpj || "");
   if (!cnpj) {
-    return NextResponse.json({ error: "CNPJ obrigatório" }, { status: 400 });
+    return apiError("VALIDATION_ERROR", "CNPJ obrigatorio.", 400);
   }
 
   const { result, source } = await lookupCnpj(cnpj);
@@ -20,12 +25,15 @@ export async function POST(req: NextRequest) {
       ? resolveBasinsByMunicipio({ uf: result.uf, municipio: result.municipio })
       : { bacias: [], municipio_norm: "", source: "internal", updated_at: "" };
 
-  return NextResponse.json({
+  return apiOk({
     ...result,
     source,
+    source_reliability: source === "opencnpj" ? "high" : "low",
+    requires_manual_confirmation: source === "mock",
     kind: detected.kind,
     kind_confidence: detected.confidence,
     kind_reason: detected.reason,
     bacias_hidrograficas: basinsResolved.bacias
   });
 }
+

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useToast } from "@/components/Toast";
+import { apiClient } from "@/lib/apiClient";
 
 type MatchRow = {
   id: string;
@@ -28,7 +29,7 @@ export default function MatchesPage() {
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabaseBrowser
       .from("matches")
@@ -45,23 +46,24 @@ export default function MatchesPage() {
 
     setRows((data as any) || []);
     setLoading(false);
-  }
+  }, [toast]);
 
   useEffect(() => {
     load();
-  }, []);
+  }, [load]);
 
   async function run() {
     setRunning(true);
     try {
-      const res = await fetch("/api/matchmaking/run", { method: "POST" });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        toast.push({ kind: "error", title: "Matchmaking", message: String(data?.error || "Falha ao rodar matchmaking.") });
-        return;
-      }
-      toast.push({ kind: "success", title: "Matchmaking", message: `Matches inseridos/atualizados: ${data?.inserted ?? 0}` });
+      const data = await apiClient<{ inserted: number; updated: number; ignored: number }>("/api/matchmaking/run", { method: "POST" });
+      toast.push({
+        kind: "success",
+        title: "Matchmaking",
+        message: `Inseridos: ${data?.inserted ?? 0} | Atualizados: ${data?.updated ?? 0} | Ignorados: ${data?.ignored ?? 0}`
+      });
       await load();
+    } catch (error) {
+      toast.push({ kind: "error", title: "Matchmaking", message: (error as Error).message || "Falha ao rodar matchmaking." });
     } finally {
       setRunning(false);
     }

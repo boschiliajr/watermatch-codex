@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
+import { apiClient } from "@/lib/apiClient";
 
 export function MunicipalityForm() {
   const [cnpj, setCnpj] = useState("");
@@ -48,16 +48,19 @@ export function MunicipalityForm() {
     setStatus(null);
     if (lookupError) return;
 
-    const { error } = await supabaseBrowser.from("municipalities").insert({
-      cnpj,
-      nome_prefeitura: nomePrefeitura,
-      municipio,
-      uf,
-      bacia_hidrografica: bacia
-    });
-
-    if (error) {
-      setStatus(error.message);
+    try {
+      await apiClient("/api/municipalities", {
+        method: "POST",
+        body: {
+          cnpj,
+          nome_prefeitura: nomePrefeitura,
+          municipio,
+          uf,
+          allow_mock: true
+        }
+      });
+    } catch (error) {
+      setStatus((error as Error).message);
       return;
     }
 

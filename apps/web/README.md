@@ -1,5 +1,29 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database Sync (Supabase CLI)
+
+The workspace root now runs a DB preflight before `dev`:
+
+```bash
+npm run dev
+```
+
+Behavior:
+- `APP_ENV=production`: blocks auto migration.
+- `APP_ENV=local` / `DB_TARGET=local`: checks local DB and runs `supabase migration up --local` when outdated.
+- `APP_ENV=staging` / `DB_TARGET=staging`: checks linked staging and runs `supabase db push --linked` when outdated.
+- `DB_SYNC_DRY_RUN=1`: only reports status (no apply).
+
+Required env for staging target:
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_PROJECT_REF`
+
+Bypass preflight:
+
+```bash
+npm run dev:skip-db
+```
+
 ## Getting Started
 
 First, run the development server:

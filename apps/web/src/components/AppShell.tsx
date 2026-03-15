@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
 import { Sidebar } from "@/components/Sidebar";
 import { ToastProvider } from "@/components/Toast";
-import { usePathname } from "next/navigation";
 
 function pageLabel(pathname: string) {
   const base = pathname.split("?")[0];
@@ -44,7 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <p className="topbar-page">{pageLabel(pathname)}</p>
               </div>
             </div>
-            <div className="hidden md:block text-xs text-black/50">Conectando tecnologia à segurança hídrica.</div>
+            <div className="hidden md:block text-xs text-black/50">Conectando tecnologia a seguranca hidrica.</div>
           </div>
 
           <div className="app-grid">

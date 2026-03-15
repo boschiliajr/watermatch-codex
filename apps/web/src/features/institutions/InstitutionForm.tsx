@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useToast } from "@/components/Toast";
+import { apiClient } from "@/lib/apiClient";
 
 type Kind = "company" | "municipality" | "government_other" | "unknown";
-
 type Basin = { code: string; name?: string; ugrhi?: number };
 
 type LookupResponse = {
@@ -15,6 +15,8 @@ type LookupResponse = {
   natureza_juridica?: { codigo?: string | null; descricao?: string | null } | null;
   cnae_principal?: { codigo?: string | null; descricao?: string | null } | null;
   source: "opencnpj" | "mock";
+  source_reliability: "high" | "low";
+  requires_manual_confirmation: boolean;
   kind: Kind;
   kind_confidence: "high" | "medium" | "low";
   kind_reason: string;
@@ -27,7 +29,7 @@ function cleanCnpj(cnpj: string) {
 function formatKind(kind: Kind) {
   if (kind === "company") return "Empresa";
   if (kind === "municipality") return "Prefeitura";
-  if (kind === "government_other") return "Órgão público (não prefeitura)";
+  if (kind === "government_other") return "Orgao publico (nao prefeitura)";
   return "Indefinido";
 }
 
@@ -44,10 +46,11 @@ export function InstitutionForm({
 
   const [cnpj, setCnpj] = useState("");
   const [kind, setKind] = useState<"company" | "municipality">(fixedKind ?? "company");
-
   const [suggestedKind, setSuggestedKind] = useState<Kind | null>(null);
   const [kindReason, setKindReason] = useState<string | null>(null);
   const [lookupMeta, setLookupMeta] = useState<{ source: string; natureza?: string; cnae?: string } | null>(null);
+  const [requiresMockConfirmation, setRequiresMockConfirmation] = useState(false);
+  const [mockConfirmed, setMockConfirmed] = useState(false);
 
   const [razaoSocial, setRazaoSocial] = useState("");
   const [nomePrefeitura, setNomePrefeitura] = useState("");
@@ -60,9 +63,9 @@ export function InstitutionForm({
   const [submitting, setSubmitting] = useState(false);
 
   const blocked = useMemo(() => {
-    // We require a successful lookup/classification before inserting.
-    return suggestedKind === null || suggestedKind === "unknown" || suggestedKind === "government_other";
-  }, [suggestedKind]);
+    const kindBlocked = suggestedKind === null || suggestedKind === "unknown" || suggestedKind === "government_other";
+    return kindBlocked || (requiresMockConfirmation && !mockConfirmed);
+  }, [mockConfirmed, requiresMockConfirmation, suggestedKind]);
 
   async function handleLookup() {
     const digits = cleanCnpj(cnpj);
@@ -73,74 +76,66 @@ export function InstitutionForm({
     setKindReason(null);
     setLookupMeta(null);
     setBacias([]);
+    setRequiresMockConfirmation(false);
+    setMockConfirmed(false);
 
-    const res = await fetch("/api/lookup-cnpj", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cnpj: digits })
-    });
+    try {
+      const data = await apiClient<LookupResponse>("/api/lookup-cnpj", {
+        method: "POST",
+        body: { cnpj: digits }
+      });
 
-    if (!res.ok) {
-      setLookupError("Falha ao consultar CNPJ.");
-      return;
-    }
+      setSuggestedKind(data.kind);
+      setKindReason(data.kind_reason);
+      setLookupMeta({
+        source: data.source,
+        natureza: data.natureza_juridica?.descricao || data.natureza_juridica?.codigo || undefined,
+        cnae: data.cnae_principal?.codigo || undefined
+      });
+      setRequiresMockConfirmation(data.requires_manual_confirmation);
 
-    const data = (await res.json()) as LookupResponse;
-    setSuggestedKind(data.kind);
-    setKindReason(data.kind_reason);
-    setLookupMeta({
-      source: data.source,
-      natureza: data.natureza_juridica?.descricao || data.natureza_juridica?.codigo || undefined,
-      cnae: data.cnae_principal?.codigo || undefined
-    });
+      setMunicipio(data.municipio || "");
+      setUf(data.uf || "");
+      setRazaoSocial(data.razao_social || "");
+      setBacias(data.bacias_hidrograficas || []);
 
-    setMunicipio(data.municipio || "");
-    setUf(data.uf || "");
-    setRazaoSocial(data.razao_social || "");
-    setBacias(data.bacias_hidrograficas || []);
-
-    const desiredKind = fixedKind ?? kind;
-    if (!fixedKind) {
-      if (data.kind === "municipality") {
-        setKind("municipality");
-      } else if (data.kind === "company") {
-        setKind("company");
+      const desiredKind = fixedKind ?? kind;
+      if (!fixedKind) {
+        if (data.kind === "municipality") setKind("municipality");
+        if (data.kind === "company") setKind("company");
       }
-    }
 
-    if (data.kind === "municipality") {
-      setNomePrefeitura((data.razao_social || `Prefeitura de ${data.municipio || ""}`).trim());
-    } else {
-      setNomePrefeitura("");
-    }
+      if (data.kind === "municipality") {
+        setNomePrefeitura((data.razao_social || `Prefeitura de ${data.municipio || ""}`).trim());
+      } else {
+        setNomePrefeitura("");
+      }
 
-    if (data.kind === "government_other") {
-      setLookupError(
-        "Este CNPJ parece ser de um órgão público que não é prefeitura/município. Por enquanto, o cadastro é bloqueado."
-      );
-      return;
-    }
+      if (data.kind === "government_other") {
+        setLookupError("Este CNPJ parece ser de orgao publico que nao e prefeitura. Cadastro bloqueado.");
+        return;
+      }
 
-    if (data.kind === "unknown") {
-      setLookupError("Não foi possível determinar se este CNPJ é de empresa ou prefeitura. Tente novamente.");
-      return;
-    }
+      if (data.kind === "unknown") {
+        setLookupError("Nao foi possivel determinar se este CNPJ e de empresa ou prefeitura.");
+        return;
+      }
 
-    if (data.kind !== desiredKind) {
-      setLookupError(
-        data.kind === "municipality"
-          ? "Este CNPJ parece ser de uma prefeitura. Use o cadastro de Prefeitura."
-          : "Este CNPJ parece ser de uma empresa. Use o cadastro de Empresa."
-      );
-      return;
+      if (data.kind !== desiredKind) {
+        setLookupError(
+          data.kind === "municipality"
+            ? "Este CNPJ parece ser de prefeitura. Use o cadastro de Prefeitura."
+            : "Este CNPJ parece ser de empresa. Use o cadastro de Empresa."
+        );
+        return;
+      }
+    } catch (error) {
+      setLookupError((error as Error).message || "Falha ao consultar CNPJ.");
     }
-
-    setLookupError(null);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     if (suggestedKind === null) {
       toast.push({ kind: "info", title: "Consulta", message: "Consulte o CNPJ antes de cadastrar." });
       return;
@@ -148,47 +143,34 @@ export function InstitutionForm({
     if (blocked) return;
 
     const digits = cleanCnpj(cnpj);
-    if (digits.length !== 14) {
-      toast.push({ kind: "error", title: "CNPJ", message: "CNPJ inválido (precisa ter 14 dígitos)." });
-      return;
-    }
-
     const desiredKind = fixedKind ?? kind;
-    const payload =
+
+    const body =
       desiredKind === "company"
         ? {
-            kind: "company",
             cnpj: digits,
             razao_social: razaoSocial,
             municipio,
             uf,
+            allow_mock: mockConfirmed,
             tags_produtos_servicos: tags
               .split(",")
               .map((t) => t.trim())
               .filter(Boolean)
           }
         : {
-            kind: "municipality",
             cnpj: digits,
             nome_prefeitura: nomePrefeitura,
             municipio,
-            uf
+            uf,
+            allow_mock: mockConfirmed
           };
+
+    const endpoint = desiredKind === "company" ? "/api/companies" : "/api/municipalities";
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/institutions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        toast.push({ kind: "error", title: "Cadastro", message: String(data?.error || "Falha ao cadastrar.") });
-        return;
-      }
-
+      await apiClient(endpoint, { method: "POST", body });
       toast.push({
         kind: "success",
         title: "Cadastro",
@@ -196,11 +178,12 @@ export function InstitutionForm({
       });
 
       onSuccess?.();
-
       setCnpj("");
       setSuggestedKind(null);
       setKindReason(null);
       setLookupMeta(null);
+      setRequiresMockConfirmation(false);
+      setMockConfirmed(false);
       setRazaoSocial("");
       setNomePrefeitura("");
       setMunicipio("");
@@ -208,6 +191,8 @@ export function InstitutionForm({
       setTags("");
       setBacias([]);
       setLookupError(null);
+    } catch (error) {
+      toast.push({ kind: "error", title: "Cadastro", message: (error as Error).message || "Falha ao cadastrar." });
     } finally {
       setSubmitting(false);
     }
@@ -220,19 +205,13 @@ export function InstitutionForm({
       <div className="grid gap-3 md:grid-cols-2">
         <label className="field-label">
           CNPJ
-          <input
-            className="input"
-            value={cnpj}
-            onChange={(e) => setCnpj(e.target.value)}
-            onBlur={handleLookup}
-            placeholder="00.000.000/0000-00"
-          />
+          <input className="input" value={cnpj} onChange={(e) => setCnpj(e.target.value)} onBlur={handleLookup} placeholder="00.000.000/0000-00" />
         </label>
 
         {showKindSelect ? (
           <label className="field-label">
             Tipo
-            <select className="input" value={kind} onChange={(e) => setKind(e.target.value as any)} disabled={blocked}>
+            <select className="input" value={kind} onChange={(e) => setKind(e.target.value as "company" | "municipality")} disabled={blocked}>
               <option value="company">Empresa</option>
               <option value="municipality">Prefeitura</option>
             </select>
@@ -249,7 +228,7 @@ export function InstitutionForm({
 
       {suggestedKind ? (
         <p className="text-xs text-black/60">
-          Sugestão do sistema: <span className="font-semibold">{formatKind(suggestedKind)}</span>
+          Sugestao: <span className="font-semibold">{formatKind(suggestedKind)}</span>
           {kindReason ? ` (${kindReason})` : null}
           {lookupMeta?.source ? ` - fonte: ${lookupMeta.source}` : null}
           {lookupMeta?.natureza ? ` - natureza: ${lookupMeta.natureza}` : null}
@@ -257,21 +236,28 @@ export function InstitutionForm({
         </p>
       ) : null}
 
+      {requiresMockConfirmation ? (
+        <label className="text-sm flex items-center gap-2">
+          <input type="checkbox" checked={mockConfirmed} onChange={(e) => setMockConfirmed(e.target.checked)} />
+          Confirmo que os dados foram validados manualmente (lookup em modo mock).
+        </label>
+      ) : null}
+
       {(fixedKind ?? kind) === "company" ? (
         <>
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Razão social
+              Razao social
               <input className="input" value={razaoSocial} onChange={(e) => setRazaoSocial(e.target.value)} />
             </label>
             <label className="field-label">
-              Tags (separadas por vírgula)
+              Tags (separadas por virgula)
               <input className="input" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="T.3.1.2, drenagem, reuso" />
             </label>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Município
+              Municipio
               <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
             <label className="field-label">
@@ -287,7 +273,6 @@ export function InstitutionForm({
               Nome da prefeitura
               <input className="input" value={nomePrefeitura} onChange={(e) => setNomePrefeitura(e.target.value)} />
             </label>
-
             <div className="field-label">
               <p>Bacias (auto)</p>
               <div className="mt-1 min-h-[42px] rounded-xl border px-3 py-2 bg-white flex flex-wrap gap-2 items-center" style={{ borderColor: "var(--border)" }}>
@@ -298,15 +283,14 @@ export function InstitutionForm({
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-black/50">Não encontrado</span>
+                  <span className="text-xs text-black/50">Nao encontrado</span>
                 )}
               </div>
             </div>
           </div>
-
           <div className="grid gap-3 md:grid-cols-2">
             <label className="field-label">
-              Município
+              Municipio
               <input className="input" value={municipio} onChange={(e) => setMunicipio(e.target.value)} />
             </label>
             <label className="field-label">

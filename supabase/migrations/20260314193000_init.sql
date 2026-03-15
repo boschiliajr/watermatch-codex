@@ -1,4 +1,4 @@
-﻿-- WaterTech Match PIT - Supabase Schema
+-- WaterTech Match PIT - Supabase Schema
 
 create extension if not exists "pgcrypto";
 

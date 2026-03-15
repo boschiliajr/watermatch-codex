@@ -6,9 +6,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm --workspace apps/web run dev",
+    "db:sync": "node scripts/db-sync.mjs",
+    "dev": "npm run db:sync && npm --workspace apps/web run dev",
+    "dev:skip-db": "npm --workspace apps/web run dev",
     "build": "npm --workspace apps/web run build",
     "start": "npm --workspace apps/web run start",
-    "lint": "npm --workspace apps/web run lint"
+    "lint": "npm --workspace apps/web run lint",
+    "test": "npm --workspace apps/web run test:run"
   }
 }

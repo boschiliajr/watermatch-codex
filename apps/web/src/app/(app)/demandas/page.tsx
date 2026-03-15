@@ -9,6 +9,7 @@ import { supabaseBrowser } from "@/lib/supabaseBrowser";
 export default function DemandasPage() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   async function refreshCount() {
     const res = await supabaseBrowser.from("demands").select("id", { count: "exact", head: true });
@@ -18,6 +19,12 @@ export default function DemandasPage() {
   useEffect(() => {
     refreshCount();
   }, []);
+
+  function handleCreated() {
+    setOpen(false);
+    refreshCount();
+    setRefreshKey((v) => v + 1);
+  }
 
   return (
     <div className="page">
@@ -33,17 +40,16 @@ export default function DemandasPage() {
         </div>
       </header>
 
-      <DemandsTable />
+      <DemandsTable refreshKey={refreshKey} />
 
       <Modal
         open={open}
         title="Nova Demanda"
         onClose={() => {
           setOpen(false);
-          refreshCount();
         }}
       >
-        <DemandForm onSuccess={() => setOpen(false)} />
+        <DemandForm onSuccess={handleCreated} />
       </Modal>
     </div>
   );

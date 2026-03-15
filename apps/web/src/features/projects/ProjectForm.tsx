@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { useToast } from "@/components/Toast";
+import { apiClient } from "@/lib/apiClient";
 
-export function ProjectForm() {
+export function ProjectForm({ onSuccess }: { onSuccess?: () => void }) {
   const toast = useToast();
 
   const [matchId, setMatchId] = useState("");
@@ -22,16 +22,19 @@ export function ProjectForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const { error } = await supabaseBrowser.from("projects").insert({
-      match_id: matchId,
-      titulo,
-      resumo,
-      valor_custo_empresa: Number(custo),
-      margem_pit_percentual: Number(margem)
-    });
-
-    if (error) {
-      toast.push({ kind: "error", title: "Projeto", message: error.message });
+    try {
+      await apiClient("/api/projects", {
+        method: "POST",
+        body: {
+          match_id: matchId,
+          titulo,
+          resumo,
+          valor_custo_empresa: Number(custo),
+          margem_pit_percentual: Number(margem)
+        }
+      });
+    } catch (error) {
+      toast.push({ kind: "error", title: "Projeto", message: (error as Error).message || "Falha ao criar projeto." });
       return;
     }
 
@@ -41,6 +44,7 @@ export function ProjectForm() {
     setResumo("");
     setCusto("0");
     setMargem("0");
+    onSuccess?.();
   }
 
   return (

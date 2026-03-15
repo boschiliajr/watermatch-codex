@@ -5,6 +5,7 @@ describe("scoreMatch", () => {
   it("scores higher when tipologia and basin match", () => {
     const high = scoreMatch({
       tipologiaCodigo: "T.3.1.2",
+      companyTipologiasApproved: ["T.3.1.2"],
       companyTags: ["T.3.1.2", "drenagem"],
       demandDescription: "Problema grave de esgoto e drenagem",
       demandBasins: ["CBH-PS"],
@@ -14,6 +15,7 @@ describe("scoreMatch", () => {
 
     const low = scoreMatch({
       tipologiaCodigo: "T.3.1.2",
+      companyTipologiasApproved: [],
       companyTags: ["residuos"],
       demandDescription: "Problema grave de esgoto e drenagem",
       demandBasins: ["CBH-PS"],
@@ -26,4 +28,3 @@ describe("scoreMatch", () => {
     expect(low).toBeGreaterThanOrEqual(0);
   });
 });
-

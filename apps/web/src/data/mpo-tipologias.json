@@ -1,0 +1,708 @@
+{
+  "source": "Anexo 1 do MPO - Tipologias dos PDCs e SubPDCs.pdf",
+  "generated_at": "2026-03-15",
+  "tipologias": [
+    {
+      "tipologia_codigo": "T.1.1.1",
+      "descricao_tipologia": "Elaboração de mapa de uso e ocupação do solo com foco na conservação, proteção, recupe",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.1"
+    },
+    {
+      "tipologia_codigo": "T.1.1.2",
+      "descricao_tipologia": "Proposição ou atualização de lei, decreto ou norma",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.1"
+    },
+    {
+      "tipologia_codigo": "T.1.2.1",
+      "descricao_tipologia": "Avaliação preliminar e investigação confirmatória em áreas de deposição/disposição de resí",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.2",
+      "descricao_tipologia": "Diagnóstico qualitativo e/ou quantitativo de recursos hídricos superficiais e/ou subterrâ",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.3",
+      "descricao_tipologia": "Diagnóstico/Levantamento/Modelagem matemática hidrometeorológica para adaptação e",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.4",
+      "descricao_tipologia": "Diagnóstico para a prevenção ou gestão de conflitos pelo uso da água",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.5",
+      "descricao_tipologia": "Estudo de determinação de recarga e reserva de aquífero",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.6",
+      "descricao_tipologia": "Estudo, levantamento ou diagnóstico de saneamento básico ou de abastecimento de água,",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.7",
+      "descricao_tipologia": "Estudo, levantamento ou diagnóstico para caracterização, prevenção ou controle de fontes",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.8",
+      "descricao_tipologia": "Estudo relacionado à interferência de sistemas agroflorestais, transição agroecológica, recu",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.9",
+      "descricao_tipologia": "Estudo relacionado a soluções baseadas na Natureza (SbN), que contribuam para proteção,",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.10",
+      "descricao_tipologia": "Estudo sobre condições de entrega em exutórios de UGRHIs, considerando aspectos quali",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.11",
+      "descricao_tipologia": "Estudo, levantamento, diagnóstico para subsidiar projetos de PSA",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.12",
+      "descricao_tipologia": "Estudos para a inovação e modernização tecnológica aplicada ao uso sustentável, proteção",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.13",
+      "descricao_tipologia": "Investigação detalhada, avaliação de risco à saúde humana e plano de intervenção em",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.14",
+      "descricao_tipologia": "Mapeamento de áreas suscetíveis a processos erosivos e deslizamentos",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.15",
+      "descricao_tipologia": "Modelagem matemática qualitativa e/ou quantitativa de recursos hídricos superficiais e/ou",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.16",
+      "descricao_tipologia": "Planejamento territorial com foco na conservação, proteção, recuperação ou uso dos recur",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.17",
+      "descricao_tipologia": "Plano de integração e/ou compatibilização de planos existentes",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.18",
+      "descricao_tipologia": "Plano de restauração ecológica",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.19",
+      "descricao_tipologia": "Plano de saneamento básico ou de abastecimento de água, ou esgotamento sanitário, ou",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.20",
+      "descricao_tipologia": "Plano de segurança hídrica quantitativo e/ou qualitativo",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.21",
+      "descricao_tipologia": "Plano diretor de controle de perdas",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.22",
+      "descricao_tipologia": "Planos para uso racional da água ou Reúso",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.23",
+      "descricao_tipologia": "Plano de comunicação social de Comitê de Bacia Hidrográfica",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.24",
+      "descricao_tipologia": "Plano diretor para a prevenção e contenção de processos erosivos",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.25",
+      "descricao_tipologia": "Programas de educação ambiental de bacias ou regiões hidrográficas",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.1.2.26",
+      "descricao_tipologia": "Estudo, levantamento ou diagnóstico para regularização de outorgas de captação para",
+      "pdc_codigo": "PDC 1",
+      "subpdc_codigo": "SubPDC 1.2"
+    },
+    {
+      "tipologia_codigo": "T.2.1.1",
+      "descricao_tipologia": "Elaboração ou atualização de planos de recursos hídricos",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.1"
+    },
+    {
+      "tipologia_codigo": "T.2.1.2",
+      "descricao_tipologia": "Elaboração do relatório de situação anual dos recursos hídricos das UGRHIs ou do Estado",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.1"
+    },
+    {
+      "tipologia_codigo": "T.2.1.3",
+      "descricao_tipologia": "Demais relatórios afetos à avaliação e acompanhamento do SIGRH",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.1"
+    },
+    {
+      "tipologia_codigo": "T.2.2.1",
+      "descricao_tipologia": "Desenvolvimento, implantação, operação, manutenção e atualização de sistema de fiscaliza",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.2"
+    },
+    {
+      "tipologia_codigo": "T.2.2.2",
+      "descricao_tipologia": "Desenvolvimento, implantação, operação, manutenção e atualização de sistema para geren",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.2"
+    },
+    {
+      "tipologia_codigo": "T.2.2.3",
+      "descricao_tipologia": "Suporte às ações de fiscalização de outorgas de direito de uso de recursos hídricos",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.2"
+    },
+    {
+      "tipologia_codigo": "T.2.3.1",
+      "descricao_tipologia": "Estudo de fundamentação para revisão de valores, critérios ou procedimentos para cobrança",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.3"
+    },
+    {
+      "tipologia_codigo": "T.2.3.2",
+      "descricao_tipologia": "Desenvolvimento ou atualização, implantação, manutenção de sistema de gerenciamento da",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.3"
+    },
+    {
+      "tipologia_codigo": "T.2.3.3",
+      "descricao_tipologia": "Desenvolvimento ou atualização de cadastro específico para cobrança pelo uso dos recursos",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.3"
+    },
+    {
+      "tipologia_codigo": "T.2.4.1",
+      "descricao_tipologia": "Monitoramento específico quali-quantitativo dos recursos hídricos para subsidiar a revisão",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.4"
+    },
+    {
+      "tipologia_codigo": "T.2.4.2",
+      "descricao_tipologia": "Estudo de fundamentação ou atualização de enquadramento",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.4"
+    },
+    {
+      "tipologia_codigo": "T.2.4.3",
+      "descricao_tipologia": "Acompanhamento do plano de efetivação do enquadramento",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.4"
+    },
+    {
+      "tipologia_codigo": "T.2.5.1",
+      "descricao_tipologia": "Desenvolvimento, implantação, operação, manutenção ou modernização de sistema de",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.5"
+    },
+    {
+      "tipologia_codigo": "T.2.5.2",
+      "descricao_tipologia": "Desenvolvimento, implantação, operação, manutenção ou modernização de sistema de infor",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.5"
+    },
+    {
+      "tipologia_codigo": "T.2.5.3",
+      "descricao_tipologia": "Implantação, operação, manutenção, modernização e ampliação de rede de monitoramento",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.5"
+    },
+    {
+      "tipologia_codigo": "T.2.5.4",
+      "descricao_tipologia": "Plano de rede de monitoramento de qualidade e/ou quantidade",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.5"
+    },
+    {
+      "tipologia_codigo": "T.2.5.5",
+      "descricao_tipologia": "Implantação, operação, manutenção e modernização de salas de situação",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.5"
+    },
+    {
+      "tipologia_codigo": "T.2.6.1",
+      "descricao_tipologia": "Estudos e ações de responsabilidade do segmento estado e/ou Agências de Bacias decorren",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.6"
+    },
+    {
+      "tipologia_codigo": "T.2.6.2",
+      "descricao_tipologia": "Estudos e ações de responsabilidade de entidades representativas de usuários de recursos",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.6"
+    },
+    {
+      "tipologia_codigo": "T.2.7.1",
+      "descricao_tipologia": "Infraestrutura de apoio ao funcionamento dos órgãos do CORHI e das Secretarias Executivas",
+      "pdc_codigo": "PDC 2",
+      "subpdc_codigo": "SubPDC 2.7"
+    },
+    {
+      "tipologia_codigo": "T.3.1.1",
+      "descricao_tipologia": "Projeto (básico e/ou executivo) de obras lineares (rede coletora de esgotos, emissário por",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.2",
+      "descricao_tipologia": "Execução de obras lineares (rede coletora, emissário por gravidade, interceptores ou coletor",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.3",
+      "descricao_tipologia": "Projeto (básico e/ou executivos) de reformas, melhorias ou obras localizadas (EEE-Estação",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.4",
+      "descricao_tipologia": "Execução de reformas, melhorias ou obras de EEE e/ou ETE",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.5",
+      "descricao_tipologia": "Projeto de sistema de automação de operação de EEE e/ou ETE",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.6",
+      "descricao_tipologia": "Projeto (básico e/ou executivos) de sistema de tratamento de lodo de ETE ou ETA",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.7",
+      "descricao_tipologia": "Execução de obras de sistema de tratamento de lodo de ETE ou ETA",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.8",
+      "descricao_tipologia": "Serviços de limpeza, remoção e desaguamento de lodo de sistemas de tratamento por lagoas",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.1.9",
+      "descricao_tipologia": "Execução de sistema alternativo de esgotamento sanitário (fossas sépticas, biodigestores,",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.1"
+    },
+    {
+      "tipologia_codigo": "T.3.2.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de recuperação de áreas contaminadas",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.2"
+    },
+    {
+      "tipologia_codigo": "T.3.2.2",
+      "descricao_tipologia": "Execução de serviços, obras ou ações de recuperação de áreas contaminadas",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.2"
+    },
+    {
+      "tipologia_codigo": "T.3.2.3",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para contenção, remoção e tratamento da poluição di",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.2"
+    },
+    {
+      "tipologia_codigo": "T.3.2.4",
+      "descricao_tipologia": "Execução de serviços, obras ou ações para contenção, remoção, e tratamento da poluição",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.2"
+    },
+    {
+      "tipologia_codigo": "T.3.3.1",
+      "descricao_tipologia": "Projeto (básico e/ou executivo) de aterros sanitários para disposição de resíduos sólidos do",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.3"
+    },
+    {
+      "tipologia_codigo": "T.3.3.2",
+      "descricao_tipologia": "Projeto (básico e/ou executivo) de implantação, ampliação ou reforma de sistema de trata",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.3"
+    },
+    {
+      "tipologia_codigo": "T.3.3.3",
+      "descricao_tipologia": "Execução de implantação, ampliação ou reforma de aterro sanitário e/ou tratamento de cho",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.3"
+    },
+    {
+      "tipologia_codigo": "T.3.3.4",
+      "descricao_tipologia": "Implantação, ampliação ou reforma de unidades de tratamento de resíduos sólidos (compos",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.3"
+    },
+    {
+      "tipologia_codigo": "T.3.3.5",
+      "descricao_tipologia": "Implantação, ampliação ou adequação da coleta seletiva municipal",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.3"
+    },
+    {
+      "tipologia_codigo": "T.3.4.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de intervenção direta nos corpos hídricos para recupera",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.4"
+    },
+    {
+      "tipologia_codigo": "T.3.4.2",
+      "descricao_tipologia": "Obras/serviços de intervenção direta nos corpos hídricos para recuperação da qualidade da",
+      "pdc_codigo": "PDC 3",
+      "subpdc_codigo": "SubPDC 3.4"
+    },
+    {
+      "tipologia_codigo": "T.4.1.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para prevenção e controle de processos erosivos, tais",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.1.2",
+      "descricao_tipologia": "Obras/serviços para prevenção e controle de processos erosivos, tais como ravinas, voçoro",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.1.3",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para proteção e/ou contenção de margens de curso",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.1.4",
+      "descricao_tipologia": "Obras/serviços de proteção e/ou contenção de margens de curso d´água",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.1.5",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de desassoreamento de curso d'água",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.1.6",
+      "descricao_tipologia": "Obras/serviços de desassoreamento em curso d´água",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.1"
+    },
+    {
+      "tipologia_codigo": "T.4.2.1",
+      "descricao_tipologia": "Projeto executivo de proteção e recuperação de sistemas aquáticos continentais, insulares",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.2",
+      "descricao_tipologia": "Implantação de projeto de proteção e recuperação de sistemas aquáticos continentais, insu",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.3",
+      "descricao_tipologia": "Projeto executivo de restauração ecológica (incluindo eventual implantação e manutenção",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.4",
+      "descricao_tipologia": "Execução de restauração ecológica",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.5",
+      "descricao_tipologia": "Projetos executivos de sistemas agroflorestais biodiversos e sucessionais, com espécies na",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.6",
+      "descricao_tipologia": "Implantação de sistemas agroflorestais biodiversos, sucessionais e com espécies nativas in",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.7",
+      "descricao_tipologia": "Projeto executivo voltado ao fortalecimento da agroecologia",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.8",
+      "descricao_tipologia": "Implantação de projeto e/ou serviço voltado ao fortalecimento da agroecologia",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.9",
+      "descricao_tipologia": "Projetos executivos de prevenção e controle de erosão e assoreamento que integrem enge",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.10",
+      "descricao_tipologia": "Implantação de projeto de prevenção e controle de erosão e assoreamento que integrem",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.11",
+      "descricao_tipologia": "Projeto executivo de aumento das áreas permeáveis e/ou redução do escoamento superfi",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.12",
+      "descricao_tipologia": "Implantação de projeto para o aumento das áreas permeáveis e/ou redução do escoa",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.2.13",
+      "descricao_tipologia": "Projeto executivo de pagamento por serviços ambientais relacionados a água",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.2"
+    },
+    {
+      "tipologia_codigo": "T.4.3.1",
+      "descricao_tipologia": "Estruturação e implementação de sistemas integrados de fiscalização Estado-municípios em",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.3"
+    },
+    {
+      "tipologia_codigo": "T.4.3.2",
+      "descricao_tipologia": "Implantação e fortalecimento da fiscalização em mananciais e respectivas áreas de contri",
+      "pdc_codigo": "PDC 4",
+      "subpdc_codigo": "SubPDC 4.3"
+    },
+    {
+      "tipologia_codigo": "T.5.1.1",
+      "descricao_tipologia": "Elaboração de projeto de setorização da rede de abastecimento de água",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.2",
+      "descricao_tipologia": "Execução da setorização de rede de abastecimento de água",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.3",
+      "descricao_tipologia": "Fornecimento e instalação de hidrômetros",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.4",
+      "descricao_tipologia": "Fornecimento e instalação de macromedidores",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.5",
+      "descricao_tipologia": "Pesquisas de vazamentos na rede",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.6",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para reabilitação de redes de água existentes visando",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.1.7",
+      "descricao_tipologia": "Execução de obras para reabilitação de redes de água existentes visando reduzir as perdas",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.1"
+    },
+    {
+      "tipologia_codigo": "T.5.2.1",
+      "descricao_tipologia": "Execução de programa de uso racional da água",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.2"
+    },
+    {
+      "tipologia_codigo": "T.5.2.2",
+      "descricao_tipologia": "Implantação de sistema de aproveitamento de água de chuva",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.2"
+    },
+    {
+      "tipologia_codigo": "T.5.3.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de sistema de reúso de água ou efluente",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.3"
+    },
+    {
+      "tipologia_codigo": "T.5.3.2",
+      "descricao_tipologia": "Implantação de sistema de reúso de água ou efluente",
+      "pdc_codigo": "PDC 5",
+      "subpdc_codigo": "SubPDC 5.3"
+    },
+    {
+      "tipologia_codigo": "T.6.1.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para captação e/ou adução de recursos hídricos subter",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.1.2",
+      "descricao_tipologia": "Obras/serviços para captação e/ou adução de recursos hídricos subterrâneos do poço até o",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.1.3",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para captação e/ou adução de recursos hídricos superfi",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.1.4",
+      "descricao_tipologia": "Obras/serviços para captação e/ou adução de recursos hídricos superficiais do corpo d'água",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.1.5",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para abastecimento de água tratada para comunidades",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.1.6",
+      "descricao_tipologia": "Obras para abastecimento de água tratada para comunidades isoladas consolidadas",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.1"
+    },
+    {
+      "tipologia_codigo": "T.6.2.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) para construção, ampliação ou recuperação de barra",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.2"
+    },
+    {
+      "tipologia_codigo": "T.6.2.2",
+      "descricao_tipologia": "Obras/serviços para construção, ampliação ou recuperação de barramento, cisterna, açude",
+      "pdc_codigo": "PDC 6",
+      "subpdc_codigo": "SubPDC 6.2"
+    },
+    {
+      "tipologia_codigo": "T.7.1.1",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de microdrenagem (sarjetas, guias, bocas de lobo, poços",
+      "pdc_codigo": "PDC 7",
+      "subpdc_codigo": "SubPDC 7.1"
+    },
+    {
+      "tipologia_codigo": "T.7.1.2",
+      "descricao_tipologia": "Obras/serviços de microdrenagem (sarjetas, guias, bocas de lobo, poços de visita, galerias,",
+      "pdc_codigo": "PDC 7",
+      "subpdc_codigo": "SubPDC 7.1"
+    },
+    {
+      "tipologia_codigo": "T.7.1.3",
+      "descricao_tipologia": "Projetos (básicos e/ou executivos) de macrodrenagem (canalizações, retificações, traves",
+      "pdc_codigo": "PDC 7",
+      "subpdc_codigo": "SubPDC 7.1"
+    },
+    {
+      "tipologia_codigo": "T.7.1.4",
+      "descricao_tipologia": "Obras/serviços de macrodrenagem (canalizações, retificações, travessias entre outros)",
+      "pdc_codigo": "PDC 7",
+      "subpdc_codigo": "SubPDC 7.1"
+    },
+    {
+      "tipologia_codigo": "T.7.2.1",
+      "descricao_tipologia": "Obras/serviços emergenciais ou temporários para uso dos recursos hídricos (captação de",
+      "pdc_codigo": "PDC 7",
+      "subpdc_codigo": "SubPDC 7.2"
+    },
+    {
+      "tipologia_codigo": "T.8.1.1",
+      "descricao_tipologia": "Organização de congressos, simpósios, workshops e eventos afins voltados a gestão dos re",
+      "pdc_codigo": "PDC 8",
+      "subpdc_codigo": "SubPDC 8.1"
+    },
+    {
+      "tipologia_codigo": "T.8.1.2",
+      "descricao_tipologia": "Organização de capacitação (cursos formais) em gestão de recursos hídricos voltada a técni",
+      "pdc_codigo": "PDC 8",
+      "subpdc_codigo": "SubPDC 8.1"
+    },
+    {
+      "tipologia_codigo": "T.8.2.1",
+      "descricao_tipologia": "Processos formativos de educação voltados à gestão dos recursos hídricos para a sociedade",
+      "pdc_codigo": "PDC 8",
+      "subpdc_codigo": "SubPDC 8.2"
+    },
+    {
+      "tipologia_codigo": "T.8.3.1",
+      "descricao_tipologia": "Campanhas educativas para comunicação e difusão de informações voltadas a conservação e",
+      "pdc_codigo": "PDC 8",
+      "subpdc_codigo": "SubPDC 8.3"
+    }
+  ]
+}

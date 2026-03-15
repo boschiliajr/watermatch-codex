@@ -24,6 +24,12 @@ export async function POST(req: Request) {
   const result = await createInstitution(parsed.data);
   if (!result.ok) return apiError(result.code, result.message, result.status, result.details);
 
-  return apiOk({ ok: true, source: result.source });
+  return apiOk({
+    ok: true,
+    source: result.source,
+    company_id: "companyId" in result ? result.companyId : null,
+    enrichment_job_id: "enrichmentJobId" in result ? result.enrichmentJobId : null,
+    enrichment_status: "enrichmentStatus" in result ? result.enrichmentStatus : null
+  });
 }
 

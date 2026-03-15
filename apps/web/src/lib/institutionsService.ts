@@ -2,6 +2,7 @@ import { detectInstitutionKind, type InstitutionKind } from "@/lib/institutionKi
 import { lookupCnpj } from "@/lib/cnpjLookup";
 import { resolveBasinsByMunicipio } from "@/lib/bacias";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { enqueueCompanyEnrichment } from "@/lib/companyEnrichmentJobs";
 
 export type CreateInstitutionPayload =
   | {
@@ -84,15 +85,40 @@ export async function createInstitution(payload: CreateInstitutionPayload) {
   if (!table) return { ok: false as const, status: 400, code: "INVALID_KIND", message: "Tipo nao suportado." };
 
   if (table === "companies" && payload.kind === "company") {
-    const { error } = await supabaseServer.from("companies").insert({
-      cnpj: payload.cnpj,
-      razao_social: payload.razao_social.trim(),
-      municipio: payload.municipio.trim(),
-      uf: payload.uf.trim().toUpperCase(),
-      tags_produtos_servicos: payload.tags_produtos_servicos || []
-    });
+    const { data, error } = await supabaseServer
+      .from("companies")
+      .insert({
+        cnpj: payload.cnpj,
+        razao_social: payload.razao_social.trim(),
+        municipio: payload.municipio.trim(),
+        uf: payload.uf.trim().toUpperCase(),
+        tags_produtos_servicos: payload.tags_produtos_servicos || []
+      })
+      .select("id")
+      .single();
     if (error) return { ok: false as const, status: 400, code: "DB_ERROR", message: error.message };
-    return { ok: true as const, source };
+
+    const companyId = String((data as any)?.id || "");
+    let enrichmentJobId: string | null = null;
+    let enrichmentStatus: string | null = null;
+    try {
+      const queued = await enqueueCompanyEnrichment({
+        companyId,
+        input: {
+          cnpj: payload.cnpj,
+          razao_social: payload.razao_social,
+          municipio: payload.municipio,
+          uf: payload.uf,
+          tags_produtos_servicos: payload.tags_produtos_servicos || []
+        }
+      });
+      enrichmentJobId = queued.jobId;
+      enrichmentStatus = queued.status;
+    } catch {
+      enrichmentJobId = null;
+      enrichmentStatus = "failed_to_queue";
+    }
+    return { ok: true as const, source, companyId, enrichmentJobId, enrichmentStatus };
   }
 
   if (payload.kind !== "municipality") return { ok: false as const, status: 400, code: "INVALID_KIND", message: "Payload invalido." };
@@ -125,4 +151,3 @@ export async function deleteInstitution(kind: string, id: string) {
   }
   return { ok: false as const, status: 400, code: "INVALID_KIND", message: "Tipo invalido." };
 }
-

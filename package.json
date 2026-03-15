@@ -1,12 +1,14 @@
 {
   "name": "watertech-match-pit",
   "private": true,
+  "license": "Apache-2.0",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "db:sync": "node scripts/db-sync.mjs",
+    "catalog:sync:mpo": "node scripts/sync-mpo-tipologias.mjs",
     "dev": "npm run db:sync && npm --workspace apps/web run dev",
     "dev:skip-db": "npm --workspace apps/web run dev",
     "build": "npm --workspace apps/web run build",

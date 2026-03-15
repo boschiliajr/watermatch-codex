@@ -43,6 +43,7 @@ function basinCodesForCompany(company: CompanyRow): string[] {
 
 export function scoreMatch(params: {
   tipologiaCodigo: string | null;
+  companyTipologiasApproved: string[];
   companyTags: string[];
   demandDescription: string;
   demandBasins: string[];
@@ -50,8 +51,11 @@ export function scoreMatch(params: {
   demandStatus: string;
 }) {
   const tagsNorm = params.companyTags.map(normalize);
+  const approvedNorm = params.companyTipologiasApproved.map(normalize);
   const tip = normalize(params.tipologiaCodigo || "");
-  const tagExact = tip && tagsNorm.some((t) => t === tip) ? 1 : 0;
+  const approvedExact = tip && approvedNorm.some((t) => t === tip) ? 1 : 0;
+  const legacyExact = tip && tagsNorm.some((t) => t === tip) ? 1 : 0;
+  const tipScore = Math.max(approvedExact, legacyExact * 0.7);
 
   const demandTokens = tokens(params.demandDescription);
   const overlap = tagsNorm.filter((t) => demandTokens.has(normalize(t))).length;
@@ -66,7 +70,7 @@ export function scoreMatch(params: {
 
   const statusWeight = normalize(params.demandStatus) === "open" || normalize(params.demandStatus) === "aberta" ? 1 : 0.4;
 
-  const raw = (tagExact * 0.6 + overlapScore * 0.25 + basinMatch * 0.15) * statusWeight;
+  const raw = (tipScore * 0.7 + overlapScore * 0.2 + basinMatch * 0.1) * statusWeight;
   return Math.round(Math.max(0, Math.min(100, raw * 100)));
 }
 
@@ -82,6 +86,22 @@ export async function runMatchmaking() {
 
   const { data: companies, error: companiesError } = await supabaseServer.from("companies").select("id, municipio, uf, tags_produtos_servicos");
   if (companiesError) throw new Error(companiesError.message);
+
+  const { data: companyTipologias, error: companyTipologiasError } = await supabaseServer
+    .from("company_tipologias")
+    .select("company_id, status, fehidro_dictionary ( tipologia_codigo )")
+    .eq("status", "approved");
+  if (companyTipologiasError) throw new Error(companyTipologiasError.message);
+
+  const approvedByCompany = new Map<string, string[]>();
+  for (const row of (companyTipologias || []) as any[]) {
+    const companyId = String(row?.company_id || "");
+    const tipRel = Array.isArray(row?.fehidro_dictionary) ? row.fehidro_dictionary[0] : row?.fehidro_dictionary;
+    const code = String(tipRel?.tipologia_codigo || "").trim();
+    if (!companyId || !code) continue;
+    if (!approvedByCompany.has(companyId)) approvedByCompany.set(companyId, []);
+    approvedByCompany.get(companyId)?.push(code);
+  }
 
   const { data: currentMatches, error: currentError } = await supabaseServer.from("matches").select("demand_id, company_id, score_compatibilidade");
   if (currentError) throw new Error(currentError.message);
@@ -102,6 +122,7 @@ export async function runMatchmaking() {
       try {
         const score = scoreMatch({
           tipologiaCodigo: tip,
+          companyTipologiasApproved: approvedByCompany.get(company.id) || [],
           companyTags: company.tags_produtos_servicos || [],
           demandDescription: demand.descricao_problema,
           demandBasins,

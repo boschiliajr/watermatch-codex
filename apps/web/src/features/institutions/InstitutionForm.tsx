@@ -22,6 +22,14 @@ type LookupResponse = {
   kind_reason: string;
 };
 
+type CreateCompanyResponse = {
+  ok: true;
+  source?: "opencnpj" | "mock";
+  company_id?: string | null;
+  enrichment_job_id?: string | null;
+  enrichment_status?: string | null;
+};
+
 function cleanCnpj(cnpj: string) {
   return cnpj.replace(/\D/g, "");
 }
@@ -170,11 +178,14 @@ export function InstitutionForm({
 
     setSubmitting(true);
     try {
-      await apiClient(endpoint, { method: "POST", body });
+      const res = await apiClient<CreateCompanyResponse>(endpoint, { method: "POST", body });
       toast.push({
         kind: "success",
         title: "Cadastro",
-        message: desiredKind === "company" ? "Empresa cadastrada com sucesso." : "Prefeitura cadastrada com sucesso."
+        message:
+          desiredKind === "company"
+            ? `Empresa cadastrada. Enriquecimento: ${res?.enrichment_status || "nao iniciado"}.`
+            : "Prefeitura cadastrada com sucesso."
       });
 
       onSuccess?.();
@@ -309,4 +320,3 @@ export function InstitutionForm({
     </form>
   );
 }
-

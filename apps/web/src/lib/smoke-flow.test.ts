@@ -14,6 +14,7 @@ describe("smoke flow", () => {
 
     const score = scoreMatch({
       tipologiaCodigo: "T.3.1.2",
+      companyTipologiasApproved: ["T.3.1.2"],
       companyTags: ["T.3.1.2", "esgoto"],
       demandDescription: "Demanda de rede de esgoto no centro",
       demandBasins: ["CBH-PS"],
@@ -24,4 +25,3 @@ describe("smoke flow", () => {
     expect(score).toBeGreaterThan(0);
   });
 });
-
